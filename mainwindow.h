@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "mainwidget.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -16,7 +18,7 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    MainWidget *mainWidget;
 };
 
 #endif // MAINWINDOW_H
