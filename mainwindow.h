@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDockWidget>
 
 #include "mainwidget.h"
 
@@ -13,8 +14,12 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void createMenus();
+    void createDockWidgets();
+
 private:
     MainWidget *mainWidget;
+    QDockWidget *bottomDockWidget;
 };
 
 #endif // MAINWINDOW_H

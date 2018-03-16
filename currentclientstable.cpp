@@ -3,6 +3,14 @@
 CurrentClientsTable::CurrentClientsTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
+    //---------------------------
+    Person testi;
+    testi.setName(QString("joku nimi"));
+    //testi.setStartingDate(QDate::currentDate());
+    testi.setStartingDate(QDate(2018, 2, 16));
+    testi.setEndingDate(testi.getStartingDate().addMonths(3));
+    listOfPeople.append(testi);
+    //---------------------------------------
 }
 
 int CurrentClientsTable::rowCount(const QModelIndex &parent) const
@@ -34,16 +42,16 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0)
+        if (index.column() == 0) //Name
             return person.getName();
-        else if(index.column() == 1)
+        else if(index.column() == 1) //Starting date
             return person.getStartingDate();
-        else if(index.column() == 2)
-            return person.getName();
-        else if(index.column() == 3)
-            return person.getName();
-        else if(index.column() == 4)
-            return person.getName();
+        else if(index.column() == 2) //Ending date
+            return person.getEndingDate();
+        else if(index.column() == 3) //Days to ending date
+            return QDate::currentDate().daysTo(person.getEndingDate());
+        else if(index.column() == 4) //Days to full year
+            return QDate::currentDate().daysTo(person.getStartingDate().addYears(1));
     }
     return QVariant();
 }

@@ -29,14 +29,16 @@ SOURCES += \
         mainwidget.cpp \
     currentclientstable.cpp \
     queuedclientstable.cpp \
-    person.cpp
+    person.cpp \
+    adddialog.cpp
 
 HEADERS += \
         mainwindow.h \
         mainwidget.h \
     currentclientstable.h \
     queuedclientstable.h \
-    person.h
+    person.h \
+    adddialog.h
 
 FORMS += \
         mainwindow.ui

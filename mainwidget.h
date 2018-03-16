@@ -3,6 +3,7 @@
 
 #include "currentclientstable.h"
 #include "queuedclientstable.h"
+#include "adddialog.h"
 
 #include <QTabWidget>
 #include <QSortFilterProxyModel>
