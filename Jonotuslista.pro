@@ -27,12 +27,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         mainwidget.cpp \
-        tablemodel.cpp
+    currentclientstable.cpp \
+    queuedclientstable.cpp \
+    person.cpp
 
 HEADERS += \
         mainwindow.h \
         mainwidget.h \
-        tablemodel.h
+    currentclientstable.h \
+    queuedclientstable.h \
+    person.h
 
 FORMS += \
         mainwindow.ui

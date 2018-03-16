@@ -1,22 +1,18 @@
-#ifndef TABLEMODEL_H
-#define TABLEMODEL_H
+#ifndef CURRENTCLIENTSTABLE_H
+#define CURRENTCLIENTSTABLE_H
 
 #include <QAbstractTableModel>
 #include <QDate>
 #include <QVector>
 
-struct Person
-{
-    QString name;
-    QDate startingDate;
-};
+#include "person.h"
 
-class TableModel : public QAbstractTableModel
+class CurrentClientsTable : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    TableModel(QObject *parent = 0);
+    CurrentClientsTable(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;
@@ -28,4 +24,4 @@ private:
     QVector<Person> listOfPeople;
 };
 
-#endif // TABLEMODEL_H
+#endif // CURRENTCLIENTSTABLE_H

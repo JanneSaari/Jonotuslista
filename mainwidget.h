@@ -1,7 +1,8 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include "tablemodel.h"
+#include "currentclientstable.h"
+#include "queuedclientstable.h"
 
 #include <QTabWidget>
 #include <QSortFilterProxyModel>
@@ -9,6 +10,7 @@
 
 class MainWindow;
 class QSortFilterProxyModel;
+class QAbstractTableModel;
 
 class MainWidget : public QTabWidget
 {
@@ -22,11 +24,14 @@ signals:
     void selectionChanged(const QItemSelection &selected);
 
 private:
-    void setupListView();
+    void setupCurrentClientsTable();
+    void setupQueuedClientsTable();
 
     QWidget *parent;
-    TableModel *table;
-    QSortFilterProxyModel *proxyModel;
+    CurrentClientsTable *currentClientsTable;
+    QueuedClientsTable *queuedClientsTable;
+    QSortFilterProxyModel *currentClientsProxyModel;
+    QSortFilterProxyModel *queuedClientsProxyModel;
 };
 
 #endif // MAINWIDGET_H

@@ -1,18 +1,17 @@
-#include "tablemodel.h"
+#include "currentclientstable.h"
 
-TableModel::TableModel(QObject *parent)
+CurrentClientsTable::CurrentClientsTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
-
 }
 
-int TableModel::rowCount(const QModelIndex &parent) const
+int CurrentClientsTable::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return listOfPeople.size();
 }
 
-int TableModel::columnCount(const QModelIndex &parent) const
+int CurrentClientsTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 5;
@@ -24,7 +23,7 @@ int TableModel::columnCount(const QModelIndex &parent) const
     päiviä 1v*/
 }
 
-QVariant TableModel::data(const QModelIndex &index, int role) const
+QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -36,20 +35,20 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
         const auto &person = listOfPeople.at(index.row());
 
         if (index.column() == 0)
-            return person.name;
+            return person.getName();
         else if(index.column() == 1)
-            return person.startingDate;
+            return person.getStartingDate();
         else if(index.column() == 2)
-            return person.name;
+            return person.getName();
         else if(index.column() == 3)
-            return person.name;
+            return person.getName();
         else if(index.column() == 4)
-            return person.name;
+            return person.getName();
     }
     return QVariant();
 }
 
-QVariant TableModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole)
         return QVariant();
@@ -74,7 +73,7 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-Qt::ItemFlags TableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CurrentClientsTable::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::ItemIsEnabled;
