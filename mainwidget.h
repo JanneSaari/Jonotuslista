@@ -1,17 +1,22 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include "tablemodel.h"
+
 #include <QTabWidget>
 #include <QSortFilterProxyModel>
+#include <QItemSelection>
 
-#include "tablemodel.h"
+class MainWindow;
+class QSortFilterProxyModel;
 
 class MainWidget : public QTabWidget
 {
     Q_OBJECT
 
 public:
-    MainWidget(QWidget *parent = 0);
+    MainWidget(MainWindow *parent = 0);
+    ~MainWidget();
 
 signals:
     void selectionChanged(const QItemSelection &selected);

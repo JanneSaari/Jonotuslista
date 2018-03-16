@@ -1,6 +1,7 @@
 #include "tablemodel.h"
 
 TableModel::TableModel(QObject *parent)
+    :QAbstractTableModel(parent)
 {
 
 }
@@ -36,8 +37,14 @@ QVariant TableModel::data(const QModelIndex &index, int role) const
 
         if (index.column() == 0)
             return person.name;
-        //else if(index.comlumn() == 1)
-            //return qejqijq
+        else if(index.column() == 1)
+            return person.startingDate;
+        else if(index.column() == 2)
+            return person.name;
+        else if(index.column() == 3)
+            return person.name;
+        else if(index.column() == 4)
+            return person.name;
     }
     return QVariant();
 }
@@ -52,7 +59,13 @@ QVariant TableModel::headerData(int section, Qt::Orientation orientation, int ro
             case 0:
                 return tr("Nimi");
             case 1:
-                return tr("Työpiste");
+                return tr("Aloituspäivä");
+            case 2:
+                return tr("Lopetuspäivä");
+            case 3:
+                return tr("Päiviä jäljellä(3kk)");
+            case 4:
+                return tr("Päiviä jäljellä(1v)");
 
             default:
                 return QVariant();

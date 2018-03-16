@@ -1,11 +1,18 @@
 #include <QTableView>
 #include <QHeaderView>
+#include <QtWidgets>
 
 #include "mainwidget.h"
 
-MainWidget::MainWidget(QWidget *parent)
+MainWidget::MainWidget(MainWindow *parent)
 {
     table = new TableModel(this);
+    setupListView();
+}
+
+MainWidget::~MainWidget()
+{
+
 }
 
 void MainWidget::setupListView()
