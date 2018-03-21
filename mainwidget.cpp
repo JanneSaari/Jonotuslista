@@ -78,7 +78,21 @@ void MainWidget::setupQueuedClientsTable()
 void MainWidget::addPerson()
 {
     AddDialog aDialog;
-    aDialog.exec();
+    Person person;
+    if(aDialog.exec()){
+        person.setName(aDialog.nameEdit->text());
+        person.setStartingDate(aDialog.startingDate->date());
+        person.setEndingDate(aDialog.endingDate->date());
+    }
+
+    currentClientsTable->insertRows(0, 1, QModelIndex());
+
+    QModelIndex index = currentClientsTable->index(0, 0, QModelIndex());
+    currentClientsTable->setData(index, person.getName(), Qt::EditRole);
+    index = currentClientsTable->index(0, 1, QModelIndex());
+    currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
+    index = currentClientsTable->index(0, 2, QModelIndex());
+    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
 }
 
 void MainWidget::editPerson()

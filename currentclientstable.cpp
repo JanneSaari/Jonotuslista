@@ -88,3 +88,41 @@ Qt::ItemFlags CurrentClientsTable::flags(const QModelIndex &index) const
 
     return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 }
+
+bool CurrentClientsTable::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (index.isValid() && role == Qt::EditRole) {
+        int row = index.row();
+
+        auto person = listOfPeople.value(row);
+
+        if (index.column() == 0)
+            person.setName(value.toString());
+        else if(index.column() == 1)
+            person.setStartingDate(value.toDate());
+        else if(index.column() == 2)
+            person.setEndingDate(value.toDate());
+        else
+            return false;
+
+        listOfPeople.replace(row, person);
+        emit(dataChanged(index, index));
+
+        return true;
+    }
+
+    return false;
+}
+
+bool CurrentClientsTable::insertRows(int position, int rows, const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    beginInsertRows(QModelIndex(), position, position + rows - 1);
+
+    for (int row = 0; row < rows; ++row) {
+        listOfPeople.insert(position, Person());
+    }
+
+    endInsertRows();
+    return true;
+}
