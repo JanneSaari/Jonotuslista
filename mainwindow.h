@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QDockWidget>
+#include <QHBoxLayout>
+#include <QPushButton>
 
 #include "mainwidget.h"
 
@@ -15,11 +17,16 @@ public:
     ~MainWindow();
 
     void createMenus();
-    void createDockWidgets();
+    void createButtons();
 
 private:
     MainWidget *mainWidget;
     QDockWidget *bottomDockWidget;
+    QWidget *buttonWidget;
+    QHBoxLayout *buttonLayout;
+    QPushButton *addPersonButton;
+    QPushButton *editPersonButton;
+    QPushButton *removePersonButton;
 };
 
 #endif // MAINWINDOW_H

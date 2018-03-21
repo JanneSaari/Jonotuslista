@@ -45,7 +45,7 @@ QVariant QueuedClientsTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0)
+        if (index.column() == 0) //
             return listOfPeople.indexOf(person) + 1;
         else if(index.column() == 1)
             return person.getName();

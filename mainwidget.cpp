@@ -4,7 +4,7 @@
 
 #include "mainwidget.h"
 
-MainWidget::MainWidget(MainWindow *parent)
+MainWidget::MainWidget()
 {
     currentClientsTable = new CurrentClientsTable(this);
     queuedClientsTable = new QueuedClientsTable(this);
@@ -73,4 +73,20 @@ void MainWidget::setupQueuedClientsTable()
     });
 
     addTab(tableView, "Jono");
+}
+
+void MainWidget::addPerson()
+{
+    AddDialog aDialog;
+    aDialog.exec();
+}
+
+void MainWidget::editPerson()
+{
+
+}
+
+void MainWidget::removePerson()
+{
+
 }

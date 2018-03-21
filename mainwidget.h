@@ -18,8 +18,13 @@ class MainWidget : public QTabWidget
     Q_OBJECT
 
 public:
-    MainWidget(MainWindow *parent = 0);
+    MainWidget();
     ~MainWidget();
+
+public slots:
+    void addPerson();
+    void editPerson();
+    void removePerson();
 
 signals:
     void selectionChanged(const QItemSelection &selected);

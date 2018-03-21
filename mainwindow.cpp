@@ -1,21 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QHBoxLayout>
-#include <QPushButton>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
     resize(1200, 800);
-    mainWidget = new MainWidget(this);
+    mainWidget = new MainWidget();
     setCentralWidget(mainWidget);
     createMenus();
-    createDockWidgets();
+    createButtons();
 }
 
 MainWindow::~MainWindow()
 {
+    delete mainWidget;
 }
 
 void MainWindow::createMenus()
@@ -23,16 +21,27 @@ void MainWindow::createMenus()
 
 }
 
-void MainWindow::createDockWidgets()
+void MainWindow::createButtons()
 {
     bottomDockWidget = new QDockWidget(this, Qt::Widget);
     bottomDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea);
     addDockWidget(Qt::BottomDockWidgetArea, bottomDockWidget);
+    bottomDockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
 
-    QWidget *dockWidget = new QWidget(this);
-    QPushButton *testiButton = new QPushButton("testi", this);
-    QHBoxLayout *dockLayout = new QHBoxLayout(this);
-    dockLayout->addWidget(testiButton);
-    dockWidget->setLayout(dockLayout);
-    bottomDockWidget->setWidget(dockWidget);
+    buttonWidget = new QWidget(this);
+    buttonLayout = new QHBoxLayout(this);
+    bottomDockWidget->setWidget(buttonWidget);
+    buttonWidget->setLayout(buttonLayout);
+
+    addPersonButton = new QPushButton(tr("Lisää"), this);
+    buttonLayout->addWidget(addPersonButton);
+    connect(addPersonButton, QPushButton::clicked, mainWidget, &MainWidget::addPerson);
+
+    editPersonButton = new QPushButton(tr("Muokkaa"), this);
+    buttonLayout->addWidget(editPersonButton);
+    connect(editPersonButton, QPushButton::clicked, mainWidget, &MainWidget::editPerson);
+
+    removePersonButton = new QPushButton(tr("Poista"), this);
+    buttonLayout->addWidget(removePersonButton);
+    connect(removePersonButton, QPushButton::clicked, mainWidget, &MainWidget::removePerson);
 }
