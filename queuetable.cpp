@@ -1,6 +1,6 @@
-#include "queuedclientstable.h"
+#include "queuetable.h"
 
-QueuedClientsTable::QueuedClientsTable(QObject *parent)
+QueueTable::QueueTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
     //---------------------------
@@ -20,13 +20,13 @@ QueuedClientsTable::QueuedClientsTable(QObject *parent)
     //---------------------------------------
 }
 
-int QueuedClientsTable::rowCount(const QModelIndex &parent) const
+int QueueTable::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return listOfPeople.size();
 }
 
-int QueuedClientsTable::columnCount(const QModelIndex &parent) const
+int QueueTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 2;
@@ -34,7 +34,7 @@ int QueuedClientsTable::columnCount(const QModelIndex &parent) const
     //Nimi
 }
 
-QVariant QueuedClientsTable::data(const QModelIndex &index, int role) const
+QVariant QueueTable::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -53,7 +53,7 @@ QVariant QueuedClientsTable::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant QueuedClientsTable::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant QueueTable::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (role != Qt::DisplayRole)
         return QVariant();
@@ -72,7 +72,7 @@ QVariant QueuedClientsTable::headerData(int section, Qt::Orientation orientation
     return QVariant();
 }
 
-Qt::ItemFlags QueuedClientsTable::flags(const QModelIndex &index) const
+Qt::ItemFlags QueueTable::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::ItemIsEnabled;
@@ -80,7 +80,7 @@ Qt::ItemFlags QueuedClientsTable::flags(const QModelIndex &index) const
     return QAbstractTableModel::flags(index) | Qt::ItemIsEditable;
 }
 
-bool QueuedClientsTable::setData(const QModelIndex &index, const QVariant &value, int role)
+bool QueueTable::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole) {
         int row = index.row();
@@ -105,7 +105,7 @@ bool QueuedClientsTable::setData(const QModelIndex &index, const QVariant &value
     return false;
 }
 
-bool QueuedClientsTable::insertRows(int position, int rows, const QModelIndex &index)
+bool QueueTable::insertRows(int position, int rows, const QModelIndex &index)
 {
     Q_UNUSED(index);
     beginInsertRows(QModelIndex(), position, position + rows - 1);

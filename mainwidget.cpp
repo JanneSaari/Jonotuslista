@@ -7,9 +7,9 @@
 MainWidget::MainWidget()
 {
     currentClientsTable = new CurrentClientsTable(this);
-    queuedClientsTable = new QueuedClientsTable(this);
+    queueTable = new QueueTable(this);
     setupCurrentClientsTable();
-    setupQueuedClientsTable();
+    setupQueueTable();
 }
 
 MainWidget::~MainWidget()
@@ -46,10 +46,10 @@ void MainWidget::setupCurrentClientsTable()
     addTab(tableView, "Henkilöt");
 }
 
-void MainWidget::setupQueuedClientsTable()
+void MainWidget::setupQueueTable()
 {
     queuedClientsProxyModel = new QSortFilterProxyModel(this);
-    queuedClientsProxyModel->setSourceModel(queuedClientsTable);
+    queuedClientsProxyModel->setSourceModel(queueTable);
 
     QTableView *tableView = new QTableView;
     tableView->setModel(queuedClientsProxyModel);
@@ -75,16 +75,21 @@ void MainWidget::setupQueuedClientsTable()
     addTab(tableView, "Jono");
 }
 
-void MainWidget::addPerson()
+void MainWidget::showAddDialog()
 {
     AddDialog aDialog;
-    Person person;
     if(aDialog.exec()){
+        Person person;
         person.setName(aDialog.nameEdit->text());
         person.setStartingDate(aDialog.startingDate->date());
         person.setEndingDate(aDialog.endingDate->date());
-    }
 
+        addPerson(person);
+    }
+}
+
+void MainWidget::addPerson(const Person person)
+{
     currentClientsTable->insertRows(0, 1, QModelIndex());
 
     QModelIndex index = currentClientsTable->index(0, 0, QModelIndex());
@@ -93,6 +98,18 @@ void MainWidget::addPerson()
     currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 2, QModelIndex());
     currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
+}
+
+void MainWidget::addPersonToQueue(const Person person)
+{
+    queueTable->insertRows(0, 1, QModelIndex());
+
+    QModelIndex index = queueTable->index(0, 0, QModelIndex());
+    queueTable->setData(index, person.getName(), Qt::EditRole);
+    index = queueTable->index(0, 1, QModelIndex());
+    queueTable->setData(index, person.getStartingDate(), Qt::EditRole);
+    index = queueTable->index(0, 2, QModelIndex());
+    queueTable->setData(index, person.getEndingDate(), Qt::EditRole);
 }
 
 void MainWidget::editPerson()

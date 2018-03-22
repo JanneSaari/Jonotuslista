@@ -35,7 +35,7 @@ void MainWindow::createButtons()
 
     addPersonButton = new QPushButton(tr("Lisää"), this);
     buttonLayout->addWidget(addPersonButton);
-    connect(addPersonButton, QPushButton::clicked, mainWidget, &MainWidget::addPerson);
+    connect(addPersonButton, QPushButton::clicked, mainWidget, &MainWidget::showAddDialog);
 
     editPersonButton = new QPushButton(tr("Muokkaa"), this);
     buttonLayout->addWidget(editPersonButton);

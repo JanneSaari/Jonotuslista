@@ -1,15 +1,15 @@
-#ifndef QUEUEDCLIENTSTABLE_H
-#define QUEUEDCLIENTSTABLE_H
+#ifndef QUEUETABLE_H
+#define QUEUETABLE_H
 
 #include <QAbstractTableModel>
 
 #include "person.h"
 
-class QueuedClientsTable : public QAbstractTableModel
+class QueueTable : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    QueuedClientsTable(QObject *parent = 0);
+    QueueTable(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent) const override;
     int columnCount(const QModelIndex &parent) const override;
@@ -24,4 +24,4 @@ private:
     QVector<Person> listOfPeople;
 };
 
-#endif // QUEUEDCLIENTSTABLE_H
+#endif // QUEUETABLE_H

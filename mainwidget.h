@@ -2,7 +2,7 @@
 #define MAINWIDGET_H
 
 #include "currentclientstable.h"
-#include "queuedclientstable.h"
+#include "queuetable.h"
 #include "adddialog.h"
 
 #include <QTabWidget>
@@ -22,7 +22,7 @@ public:
     ~MainWidget();
 
 public slots:
-    void addPerson();
+    void showAddDialog();
     void editPerson();
     void removePerson();
 
@@ -31,11 +31,13 @@ signals:
 
 private:
     void setupCurrentClientsTable();
-    void setupQueuedClientsTable();
+    void setupQueueTable();
+    void addPerson(const Person person);
+    void addPersonToQueue(const Person person);
 
     QWidget *parent;
     CurrentClientsTable *currentClientsTable;
-    QueuedClientsTable *queuedClientsTable;
+    QueueTable *queueTable;
     QSortFilterProxyModel *currentClientsProxyModel;
     QSortFilterProxyModel *queuedClientsProxyModel;
 };
