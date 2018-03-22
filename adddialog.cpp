@@ -3,14 +3,20 @@
 AddDialog::AddDialog()
 {
     mainLayout = new QVBoxLayout(this);
-    formLayout = new QFormLayout(this);
-    buttonLayout = new QHBoxLayout(this);
     setLayout(mainLayout);
+    formLayout = new QFormLayout();
     mainLayout->addLayout(formLayout);
+    buttonLayout = new QHBoxLayout();
     mainLayout->addLayout(buttonLayout);
 
     createEditFields();
     createButtons();
+}
+
+AddDialog::~AddDialog()
+{
+    delete formLayout;
+    delete buttonLayout;
 }
 
 void AddDialog::createEditFields()

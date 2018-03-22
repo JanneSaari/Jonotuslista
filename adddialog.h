@@ -14,6 +14,7 @@ class AddDialog : public QDialog
 {
 public:
     AddDialog();
+    ~AddDialog();
 
     QLineEdit *nameEdit;
     QDateEdit *startingDate;

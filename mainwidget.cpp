@@ -84,7 +84,10 @@ void MainWidget::showAddDialog()
         person.setStartingDate(aDialog.startingDate->date());
         person.setEndingDate(aDialog.endingDate->date());
 
-        addPerson(person);
+        if(currentIndex() == 0)
+            addPerson(person);
+        else if(currentIndex() == 1)
+            addPersonToQueue(person);
     }
 }
 
@@ -102,14 +105,10 @@ void MainWidget::addPerson(const Person person)
 
 void MainWidget::addPersonToQueue(const Person person)
 {
-    queueTable->insertRows(0, 1, QModelIndex());
+    queueTable->insertRows(queueTable->getListOfPeople().size(), 1, QModelIndex());
 
-    QModelIndex index = queueTable->index(0, 0, QModelIndex());
+    QModelIndex index = queueTable->index(queueTable->getListOfPeople().size() - 1, 1, QModelIndex());
     queueTable->setData(index, person.getName(), Qt::EditRole);
-    index = queueTable->index(0, 1, QModelIndex());
-    queueTable->setData(index, person.getStartingDate(), Qt::EditRole);
-    index = queueTable->index(0, 2, QModelIndex());
-    queueTable->setData(index, person.getEndingDate(), Qt::EditRole);
 }
 
 void MainWidget::editPerson()
@@ -119,5 +118,17 @@ void MainWidget::editPerson()
 
 void MainWidget::removePerson()
 {
+    QTableView *temp = static_cast<QTableView*>(currentWidget());
+    QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
+    QItemSelectionModel *selectionModel = temp->selectionModel();
 
+    QModelIndexList indexes = selectionModel->selectedRows();
+
+    foreach (QModelIndex index, indexes) {
+        int row = proxy->mapToSource(index).row();
+        if(currentIndex() == 0)
+            currentClientsTable->removeRows(row, 1, QModelIndex());
+        else if(currentIndex() == 1)
+            queueTable->removeRows(row, 1, QModelIndex());
+    }
 }

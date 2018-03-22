@@ -29,7 +29,7 @@ void MainWindow::createButtons()
     bottomDockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
 
     buttonWidget = new QWidget(this);
-    buttonLayout = new QHBoxLayout(this);
+    buttonLayout = new QHBoxLayout(buttonWidget);
     bottomDockWidget->setWidget(buttonWidget);
     buttonWidget->setLayout(buttonLayout);
 

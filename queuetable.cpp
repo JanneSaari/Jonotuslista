@@ -4,19 +4,19 @@ QueueTable::QueueTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
     //---------------------------
-    Person testi;
-    testi.setName(QString("joku nimi"));
-    testi.setStartingDate(QDate::currentDate());
-    listOfPeople.append(testi);
-    Person testi2;
-    testi2.setName("toinen nimi");
-    listOfPeople.append(testi2);
-    Person testi3;
-    testi3.setName("kolmas nimi");
-    listOfPeople.append(testi3);
-    Person testi4;
-    testi4.setName("neljäs nimi");
-    listOfPeople.append(testi4);
+//    Person testi;
+//    testi.setName(QString("joku nimi"));
+//    testi.setStartingDate(QDate::currentDate());
+//    listOfPeople.append(testi);
+//    Person testi2;
+//    testi2.setName("toinen nimi");
+//    listOfPeople.append(testi2);
+//    Person testi3;
+//    testi3.setName("kolmas nimi");
+//    listOfPeople.append(testi3);
+//    Person testi4;
+//    testi4.setName("neljäs nimi");
+//    listOfPeople.append(testi4);
     //---------------------------------------
 }
 
@@ -89,10 +89,6 @@ bool QueueTable::setData(const QModelIndex &index, const QVariant &value, int ro
 
         if (index.column() == 1)
             person.setName(value.toString());
-        else if(index.column() == 2)
-            person.setStartingDate(value.toDate());
-        else if(index.column() == 3)
-            person.setEndingDate(value.toDate());
         else
             return false;
 
@@ -116,4 +112,22 @@ bool QueueTable::insertRows(int position, int rows, const QModelIndex &index)
 
     endInsertRows();
     return true;
+}
+
+bool QueueTable::removeRows(int position, int rows, const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    beginRemoveRows(QModelIndex(), position, position + rows - 1);
+
+    for(int row = 0; row < rows; ++row) {
+        listOfPeople.removeAt(position);
+    }
+
+    endRemoveRows();
+    return true;
+}
+
+QVector<Person> QueueTable::getListOfPeople()
+{
+    return listOfPeople;
 }

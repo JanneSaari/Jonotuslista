@@ -4,12 +4,12 @@ CurrentClientsTable::CurrentClientsTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
     //---------------------------
-    Person testi;
-    testi.setName(QString("joku nimi"));
-    //testi.setStartingDate(QDate::currentDate());
-    testi.setStartingDate(QDate(2018, 2, 16));
-    testi.setEndingDate(testi.getStartingDate().addMonths(3));
-    listOfPeople.append(testi);
+//    Person testi;
+//    testi.setName(QString("joku nimi"));
+//    //testi.setStartingDate(QDate::currentDate());
+//    testi.setStartingDate(QDate(2018, 2, 16));
+//    testi.setEndingDate(testi.getStartingDate().addMonths(3));
+//    listOfPeople.append(testi);
     //---------------------------------------
 }
 
@@ -124,5 +124,18 @@ bool CurrentClientsTable::insertRows(int position, int rows, const QModelIndex &
     }
 
     endInsertRows();
+    return true;
+}
+
+bool CurrentClientsTable::removeRows(int position, int rows, const QModelIndex &index)
+{
+    Q_UNUSED(index);
+    beginRemoveRows(QModelIndex(), position, position + rows - 1);
+
+    for(int row = 0; row < rows; ++row) {
+        listOfPeople.removeAt(position);
+    }
+
+    endRemoveRows();
     return true;
 }
