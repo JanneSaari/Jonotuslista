@@ -21,6 +21,8 @@ public:
     MainWidget();
     ~MainWidget();
 
+    Person getPerson(int row);
+
 public slots:
     void showAddDialog();
     void editPerson();
@@ -34,6 +36,7 @@ private:
     void setupQueueTable();
     void addPerson(const Person person);
     void addPersonToQueue(const Person person);
+    void editValues(Person oldValues, int row);
 
     QWidget *parent;
     CurrentClientsTable *currentClientsTable;

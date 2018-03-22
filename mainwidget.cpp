@@ -17,6 +17,29 @@ MainWidget::~MainWidget()
 
 }
 
+Person MainWidget::getPerson(int row)
+{
+    Person person;
+    if(currentIndex() == 0) {
+        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
+        QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
+        person.setName(varName.toString());
+        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
+        QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
+        person.setStartingDate(varStartDate.toDate());
+        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
+        QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
+        person.setEndingDate(varEndDate.toDate());
+    }
+    else if(currentIndex() == 1) {
+        QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
+        QVariant varName = queueTable->data(nameIndex, Qt::DisplayRole);
+        person.setName(varName.toString());
+    }
+
+    return person;
+}
+
 void MainWidget::setupCurrentClientsTable()
 {
     currentClientsProxyModel = new QSortFilterProxyModel(this);
@@ -113,7 +136,17 @@ void MainWidget::addPersonToQueue(const Person person)
 
 void MainWidget::editPerson()
 {
+    QTableView *temp = static_cast<QTableView*>(currentWidget());
+    QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
+    QItemSelectionModel *selectionModel = temp->selectionModel();
+    QModelIndexList indexes = selectionModel->selectedRows();
 
+    foreach (QModelIndex index, indexes) {
+        int row = proxy->mapToSource(index).row();
+
+        Person person = getPerson(row);
+        editValues(person, row);
+    }
 }
 
 void MainWidget::removePerson()
@@ -130,5 +163,43 @@ void MainWidget::removePerson()
             currentClientsTable->removeRows(row, 1, QModelIndex());
         else if(currentIndex() == 1)
             queueTable->removeRows(row, 1, QModelIndex());
+    }
+}
+
+void MainWidget::editValues(Person oldValues, int row)
+{
+    AddDialog editDialog;
+    editDialog.setWindowTitle(tr("Muokkaa Henkilöä"));
+
+    editDialog.nameEdit->setText(oldValues.getName());
+    editDialog.startingDate->setDate(oldValues.getStartingDate());
+    editDialog.endingDate->setDate(oldValues.getEndingDate());
+
+    if(editDialog.exec()) {
+        Person newValues;
+        if(currentIndex() == 0) {
+            newValues.setName(editDialog.nameEdit->text());
+            if(newValues.getName() != oldValues.getName()) {
+                QModelIndex index = currentClientsTable->index(row, 0, QModelIndex());
+                currentClientsTable->setData(index, QVariant(newValues.getName()), Qt::EditRole);
+            }
+            newValues.setStartingDate(editDialog.startingDate->date());
+            if(newValues.getStartingDate() != oldValues.getStartingDate()) {
+                QModelIndex index = currentClientsTable->index(row, 1, QModelIndex());
+                currentClientsTable->setData(index, QVariant(newValues.getStartingDate()), Qt::EditRole);
+            }
+            newValues.setEndingDate(editDialog.endingDate->date());
+            if(newValues.getEndingDate() != oldValues.getEndingDate()) {
+                QModelIndex index = currentClientsTable->index(row, 2, QModelIndex());
+                currentClientsTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
+            }
+        }
+        if(currentIndex() == 1) {
+            newValues.setName(editDialog.nameEdit->text());
+            if(newValues.getName() != oldValues.getName()) {
+                QModelIndex index = queueTable->index(row, 1, QModelIndex());
+                queueTable->setData(index, QVariant(newValues.getName()), Qt::EditRole);
+            }
+        }
     }
 }
