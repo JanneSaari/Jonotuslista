@@ -19,7 +19,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
-    QVector<Person> getListOfPeople();
+    QVector<Person> getPeople();
 
 private:
     QVector<Person> listOfPeople;

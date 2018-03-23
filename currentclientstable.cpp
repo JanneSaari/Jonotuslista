@@ -3,14 +3,6 @@
 CurrentClientsTable::CurrentClientsTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
-    //---------------------------
-//    Person testi;
-//    testi.setName(QString("joku nimi"));
-//    //testi.setStartingDate(QDate::currentDate());
-//    testi.setStartingDate(QDate(2018, 2, 16));
-//    testi.setEndingDate(testi.getStartingDate().addMonths(3));
-//    listOfPeople.append(testi);
-    //---------------------------------------
 }
 
 int CurrentClientsTable::rowCount(const QModelIndex &parent) const
@@ -147,4 +139,9 @@ bool CurrentClientsTable::removeRows(int position, int rows, const QModelIndex &
 
     endRemoveRows();
     return true;
+}
+
+QVector<Person> CurrentClientsTable::getPeople()
+{
+    return listOfPeople;
 }

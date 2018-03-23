@@ -10,11 +10,12 @@ MainWidget::MainWidget()
     queueTable = new QueueTable(this);
     setupCurrentClientsTable();
     setupQueueTable();
+    readFromFile("testi");
 }
 
 MainWidget::~MainWidget()
 {
-
+    writeToFile("testi");
 }
 
 Person MainWidget::getPerson(int row)
@@ -142,11 +143,11 @@ void MainWidget::addPerson(const Person person)
 
 void MainWidget::addPersonToQueue(const Person person)
 {
-    queueTable->insertRows(queueTable->getListOfPeople().size(), 1, QModelIndex());
+    queueTable->insertRows(queueTable->getPeople().size(), 1, QModelIndex());
 
-    QModelIndex index = queueTable->index(queueTable->getListOfPeople().size() - 1, 1, QModelIndex());
+    QModelIndex index = queueTable->index(queueTable->getPeople().size() - 1, 1, QModelIndex());
     queueTable->setData(index, person.getName(), Qt::EditRole);
-    index = queueTable->index(queueTable->getListOfPeople().size() - 1, 2, QModelIndex());
+    index = queueTable->index(queueTable->getPeople().size() - 1, 2, QModelIndex());
     queueTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 
@@ -252,4 +253,72 @@ void MainWidget::editValues(Person oldValues, int row)
             }
         }
     }
+}
+
+void MainWidget::readFromFile(QString fileName)
+{
+    QFile currentFile(fileName.append("current"));
+
+    if (!currentFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."),
+            currentFile.errorString());
+        return;
+    }
+
+    QVector<Person> listOfPeople;
+    QDataStream currentIn(&currentFile);
+    currentIn >> listOfPeople;
+
+    if (listOfPeople.isEmpty()) {
+        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
+                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
+    } else {
+        //table->resetTable();
+        for (const auto &person: qAsConst(listOfPeople))
+            addPerson(person);
+    }
+
+    QFile queueFile(fileName.append("queue"));
+
+    if (!queueFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."),
+            queueFile.errorString());
+        return;
+    }
+
+    QVector<Person> queueList;
+    QDataStream queueIn(&queueFile);
+    queueIn >> queueList;
+
+    if (queueList.isEmpty()) {
+        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
+                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
+    } else {
+        //table->resetTable();
+        for (const auto &person: qAsConst(queueList))
+            addPersonToQueue(person);
+    }
+}
+
+void MainWidget::writeToFile(QString fileName)
+{
+    QFile currentClients(fileName.append("current"));
+
+    if (!currentClients.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), currentClients.errorString());
+        return;
+    }
+
+    QDataStream currentOut(&currentClients);
+    currentOut << currentClientsTable->getPeople();
+
+    QFile queueFile(fileName.append("queue"));
+
+    if (!queueFile.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), queueFile.errorString());
+        return;
+    }
+
+    QDataStream queueOut(&queueFile);
+    queueOut << queueTable->getPeople();
 }

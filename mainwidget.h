@@ -38,6 +38,8 @@ private:
     void addPerson(const Person person);
     void addPersonToQueue(const Person person);
     void editValues(Person oldValues, int row);
+    void readFromFile(QString fileName);
+    void writeToFile(QString fileName);
 
     CurrentClientsTable *currentClientsTable;
     QueueTable *queueTable;

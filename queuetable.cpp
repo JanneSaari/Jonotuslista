@@ -3,21 +3,6 @@
 QueueTable::QueueTable(QObject *parent)
     :QAbstractTableModel(parent)
 {
-    //---------------------------
-//    Person testi;
-//    testi.setName(QString("joku nimi"));
-//    testi.setStartingDate(QDate::currentDate());
-//    listOfPeople.append(testi);
-//    Person testi2;
-//    testi2.setName("toinen nimi");
-//    listOfPeople.append(testi2);
-//    Person testi3;
-//    testi3.setName("kolmas nimi");
-//    listOfPeople.append(testi3);
-//    Person testi4;
-//    testi4.setName("neljäs nimi");
-//    listOfPeople.append(testi4);
-    //---------------------------------------
 }
 
 int QueueTable::rowCount(const QModelIndex &parent) const
@@ -45,7 +30,7 @@ QVariant QueueTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0) //
+        if (index.column() == 0)
             return listOfPeople.indexOf(person) + 1;
         else if(index.column() == 1)
             return person.getName();
@@ -133,7 +118,7 @@ bool QueueTable::removeRows(int position, int rows, const QModelIndex &index)
     return true;
 }
 
-QVector<Person> QueueTable::getListOfPeople()
+QVector<Person> QueueTable::getPeople()
 {
     return listOfPeople;
 }

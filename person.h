@@ -2,6 +2,7 @@
 #define PERSON_H
 
 #include <QDate>
+#include <QDataStream>
 
 class Person
 {
@@ -23,11 +24,24 @@ public:
         return name == other.name;
     }
 
-private:
+    //TODO make private
     QString name;
     QDate startingDate;
     QDate endingDate;
     QString info;
 };
+
+
+inline QDataStream &operator<<(QDataStream &stream, const Person &person)
+{
+    return stream << person.getName() << person.getStartingDate()
+                  << person.getEndingDate() << person.getInfo();
+}
+
+inline QDataStream &operator>>(QDataStream &stream, Person &person)
+{
+    return stream >> person.name >> person.startingDate
+                  >> person.endingDate >> person.info;
+}
 
 #endif // PERSON_H
