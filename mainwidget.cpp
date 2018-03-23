@@ -107,6 +107,7 @@ void MainWidget::setupQueueTable()
 void MainWidget::showAddDialog()
 {
     AddDialog aDialog;
+    aDialog.setWindowTitle(tr("Lisää Henkilö"));
     if(aDialog.exec()){
         Person person;
         person.setName(aDialog.nameField->text());
@@ -181,6 +182,25 @@ void MainWidget::removePerson()
     }
 }
 
+void MainWidget::moveFromQueue()
+{
+    if(currentIndex() == 1) {
+        QTableView *temp = static_cast<QTableView*>(currentWidget());
+        QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
+        QItemSelectionModel *selectionModel = temp->selectionModel();
+
+        QModelIndexList indexes = selectionModel->selectedRows();
+
+        foreach (QModelIndex index, indexes) {
+            int row = proxy->mapToSource(index).row();
+            editPerson();
+            Person person = getPerson(row);
+            addPerson(person);
+            removePerson();
+        }
+    }
+}
+
 void MainWidget::editValues(Person oldValues, int row)
 {
     AddDialog editDialog;
@@ -203,6 +223,8 @@ void MainWidget::editValues(Person oldValues, int row)
             if(newValues.getStartingDate() != oldValues.getStartingDate()) {
                 QModelIndex index = currentClientsTable->index(row, 1, QModelIndex());
                 currentClientsTable->setData(index, QVariant(newValues.getStartingDate()), Qt::EditRole);
+                index = currentClientsTable->index(row, 4, QModelIndex());
+                currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getStartingDate().addYears(1))), Qt::EditRole);
             }
             newValues.setEndingDate(editDialog.endingDate->date());
             if(newValues.getEndingDate() != oldValues.getEndingDate()) {
@@ -210,8 +232,6 @@ void MainWidget::editValues(Person oldValues, int row)
                 currentClientsTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
                 index = currentClientsTable->index(row, 3, QModelIndex());
                 currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getEndingDate())), Qt::EditRole);
-                index = currentClientsTable->index(row, 4, QModelIndex());
-                currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getStartingDate().addYears(1))), Qt::EditRole);
             }
             newValues.setInfo(editDialog.infoField->text());
             if(newValues.getInfo() != oldValues.getInfo()) {

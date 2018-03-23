@@ -19,6 +19,9 @@ public:
     void createMenus();
     void createButtons();
 
+public slots:
+    void updateButtons();
+
 private:
     MainWidget *mainWidget;
     QDockWidget *bottomDockWidget;
@@ -27,6 +30,7 @@ private:
     QPushButton *addPersonButton;
     QPushButton *editPersonButton;
     QPushButton *removePersonButton;
+    QPushButton *moveFromQueueButton;
 };
 
 #endif // MAINWINDOW_H

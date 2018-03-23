@@ -27,6 +27,7 @@ public slots:
     void showAddDialog();
     void editPerson();
     void removePerson();
+    void moveFromQueue();
 
 signals:
     void selectionChanged(const QItemSelection &selected);
@@ -38,7 +39,6 @@ private:
     void addPersonToQueue(const Person person);
     void editValues(Person oldValues, int row);
 
-    QWidget *parent;
     CurrentClientsTable *currentClientsTable;
     QueueTable *queueTable;
     QSortFilterProxyModel *currentClientsProxyModel;

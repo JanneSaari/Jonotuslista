@@ -44,4 +44,21 @@ void MainWindow::createButtons()
     removePersonButton = new QPushButton(tr("Poista"), this);
     buttonLayout->addWidget(removePersonButton);
     connect(removePersonButton, QPushButton::clicked, mainWidget, &MainWidget::removePerson);
+
+    moveFromQueueButton = new QPushButton(tr("Siirrä jonosta"), this);
+    buttonLayout->addWidget(moveFromQueueButton);
+    connect(moveFromQueueButton, QPushButton::clicked, mainWidget, &MainWidget::moveFromQueue);
+    moveFromQueueButton->setEnabled(false);
+
+    connect(mainWidget, QTabWidget::currentChanged, this, &MainWindow::updateButtons);
+}
+
+void MainWindow::updateButtons()
+{
+    if(mainWidget->currentIndex() == 0) {
+        moveFromQueueButton->setEnabled(false);
+    }
+    if(mainWidget->currentIndex() == 1) {
+        moveFromQueueButton->setEnabled(true);
+    }
 }
