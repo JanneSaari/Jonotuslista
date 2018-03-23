@@ -19,6 +19,11 @@ void Person::setEndingDate(QDate date)
     endingDate = date;
 }
 
+void Person::setInfo(QString info)
+{
+    this->info = info;
+}
+
 QString Person::getName() const
 {
     return name;
@@ -32,4 +37,9 @@ QDate Person::getStartingDate() const
 QDate Person::getEndingDate() const
 {
     return endingDate;
+}
+
+QString Person::getInfo() const
+{
+    return info;
 }

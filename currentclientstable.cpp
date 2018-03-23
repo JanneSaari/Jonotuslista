@@ -22,13 +22,16 @@ int CurrentClientsTable::rowCount(const QModelIndex &parent) const
 int CurrentClientsTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 5;
-    /*Nimi,
-    aloituspäivä,
-    lopetuspäivä,
+    return 6;
+    /*
+    0 Nimi,
+    1 aloituspäivä,
+    2 lopetuspäivä,
     (lopetuspäivä 1v),
-    päiviä 3kk,
-    päiviä 1v*/
+    3 päiviä 3kk,
+    4 päiviä 1v
+    5 lisätietoa
+    */
 }
 
 QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
@@ -52,6 +55,8 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
             return QDate::currentDate().daysTo(person.getEndingDate());
         else if(index.column() == 4) //Days to full year
             return QDate::currentDate().daysTo(person.getStartingDate().addYears(1));
+        else if(index.column() == 5) //Info
+            return person.getInfo();
     }
     return QVariant();
 }
@@ -73,6 +78,8 @@ QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientatio
                 return tr("Päiviä jäljellä(3kk)");
             case 4:
                 return tr("Päiviä jäljellä(1v)");
+            case 5:
+                return tr("Lisätietoa");
 
             default:
                 return QVariant();
@@ -102,6 +109,8 @@ bool CurrentClientsTable::setData(const QModelIndex &index, const QVariant &valu
             person.setStartingDate(value.toDate());
         else if(index.column() == 2)
             person.setEndingDate(value.toDate());
+        else if(index.column() == 5)
+            person.setInfo(value.toString());
         else
             return false;
 

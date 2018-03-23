@@ -30,11 +30,17 @@ Person MainWidget::getPerson(int row)
         QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
         QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
         person.setEndingDate(varEndDate.toDate());
+        QModelIndex infoIndex = currentClientsTable->index(row, 5, QModelIndex());
+        QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
+        person.setInfo(varInfo.toString());
     }
     else if(currentIndex() == 1) {
         QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
         QVariant varName = queueTable->data(nameIndex, Qt::DisplayRole);
         person.setName(varName.toString());
+        QModelIndex infoIndex = queueTable->index(row, 2, QModelIndex());
+        QVariant varInfo = queueTable->data(infoIndex, Qt::DisplayRole);
+        person.setInfo(varInfo.toString());
     }
 
     return person;
@@ -103,9 +109,10 @@ void MainWidget::showAddDialog()
     AddDialog aDialog;
     if(aDialog.exec()){
         Person person;
-        person.setName(aDialog.nameEdit->text());
+        person.setName(aDialog.nameField->text());
         person.setStartingDate(aDialog.startingDate->date());
         person.setEndingDate(aDialog.endingDate->date());
+        person.setInfo(aDialog.infoField->text());
 
         if(currentIndex() == 0)
             addPerson(person);
@@ -124,6 +131,12 @@ void MainWidget::addPerson(const Person person)
     currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 2, QModelIndex());
     currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
+    index = currentClientsTable->index(0, 3, QModelIndex());
+    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
+    index = currentClientsTable->index(0, 4, QModelIndex());
+    currentClientsTable->setData(index, person.getStartingDate().addYears(1), Qt::EditRole);
+    index = currentClientsTable->index(0, 5, QModelIndex());
+    currentClientsTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 
 void MainWidget::addPersonToQueue(const Person person)
@@ -132,6 +145,8 @@ void MainWidget::addPersonToQueue(const Person person)
 
     QModelIndex index = queueTable->index(queueTable->getListOfPeople().size() - 1, 1, QModelIndex());
     queueTable->setData(index, person.getName(), Qt::EditRole);
+    index = queueTable->index(queueTable->getListOfPeople().size() - 1, 2, QModelIndex());
+    queueTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 
 void MainWidget::editPerson()
@@ -171,14 +186,15 @@ void MainWidget::editValues(Person oldValues, int row)
     AddDialog editDialog;
     editDialog.setWindowTitle(tr("Muokkaa Henkilöä"));
 
-    editDialog.nameEdit->setText(oldValues.getName());
+    editDialog.nameField->setText(oldValues.getName());
     editDialog.startingDate->setDate(oldValues.getStartingDate());
     editDialog.endingDate->setDate(oldValues.getEndingDate());
+    editDialog.infoField->setText(oldValues.getInfo());
 
     if(editDialog.exec()) {
         Person newValues;
         if(currentIndex() == 0) {
-            newValues.setName(editDialog.nameEdit->text());
+            newValues.setName(editDialog.nameField->text());
             if(newValues.getName() != oldValues.getName()) {
                 QModelIndex index = currentClientsTable->index(row, 0, QModelIndex());
                 currentClientsTable->setData(index, QVariant(newValues.getName()), Qt::EditRole);
@@ -192,13 +208,27 @@ void MainWidget::editValues(Person oldValues, int row)
             if(newValues.getEndingDate() != oldValues.getEndingDate()) {
                 QModelIndex index = currentClientsTable->index(row, 2, QModelIndex());
                 currentClientsTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
+                index = currentClientsTable->index(row, 3, QModelIndex());
+                currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getEndingDate())), Qt::EditRole);
+                index = currentClientsTable->index(row, 4, QModelIndex());
+                currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getStartingDate().addYears(1))), Qt::EditRole);
+            }
+            newValues.setInfo(editDialog.infoField->text());
+            if(newValues.getInfo() != oldValues.getInfo()) {
+                QModelIndex index = currentClientsTable->index(row, 5, QModelIndex());
+                currentClientsTable->setData(index, QVariant(newValues.getInfo()), Qt::EditRole);
             }
         }
         if(currentIndex() == 1) {
-            newValues.setName(editDialog.nameEdit->text());
+            newValues.setName(editDialog.nameField->text());
             if(newValues.getName() != oldValues.getName()) {
                 QModelIndex index = queueTable->index(row, 1, QModelIndex());
                 queueTable->setData(index, QVariant(newValues.getName()), Qt::EditRole);
+            }
+            newValues.setInfo(editDialog.infoField->text());
+            if(newValues.getInfo() != oldValues.getInfo()) {
+                QModelIndex index = queueTable->index(row, 2, QModelIndex());
+                queueTable->setData(index, QVariant(newValues.getInfo()), Qt::EditRole);
             }
         }
     }

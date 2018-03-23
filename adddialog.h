@@ -16,7 +16,8 @@ public:
     AddDialog();
     ~AddDialog();
 
-    QLineEdit *nameEdit;
+    QLineEdit *nameField;
+    QLineEdit *infoField;
     QDateEdit *startingDate;
     QDateEdit *endingDate;
 
@@ -28,6 +29,7 @@ private:
     QFormLayout *formLayout;
     QHBoxLayout *buttonLayout;
     QLabel *nameLabel;
+    QLabel *infoLabel;
     QLabel *startingDateLabel;
     QLabel *endingDateLabel;
     QPushButton *okButton;

@@ -29,7 +29,7 @@ int QueueTable::rowCount(const QModelIndex &parent) const
 int QueueTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 2;
+    return 3;
     //Paikka jonossa
     //Nimi
 }
@@ -49,6 +49,8 @@ QVariant QueueTable::data(const QModelIndex &index, int role) const
             return listOfPeople.indexOf(person) + 1;
         else if(index.column() == 1)
             return person.getName();
+        else if(index.column() == 2)
+            return person.getInfo();
     }
     return QVariant();
 }
@@ -64,6 +66,8 @@ QVariant QueueTable::headerData(int section, Qt::Orientation orientation, int ro
                 return tr("Paikka jonossa");
             case 1:
                 return tr("Nimi");
+            case 2:
+                return tr("Info");
 
             default:
                 return QVariant();
@@ -89,6 +93,8 @@ bool QueueTable::setData(const QModelIndex &index, const QVariant &value, int ro
 
         if (index.column() == 1)
             person.setName(value.toString());
+        else if(index.column() == 2)
+            person.setInfo(value.toString());
         else
             return false;
 

@@ -22,8 +22,11 @@ AddDialog::~AddDialog()
 void AddDialog::createEditFields()
 {
     nameLabel = new QLabel(tr("Nimi"), this);
-    nameEdit = new QLineEdit(this);
-    formLayout->addRow(nameLabel, nameEdit);
+    nameField = new QLineEdit(this);
+    formLayout->addRow(nameLabel, nameField);
+    infoLabel = new QLabel(tr("Lisätietoa"), this);
+    infoField = new QLineEdit(this);
+    formLayout->addRow(infoLabel, infoField);
 
     startingDateLabel = new QLabel(tr("Aloituspäivä"), this);
     startingDate = new QDateEdit(QDate::currentDate(), this);
