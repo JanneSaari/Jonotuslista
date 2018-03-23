@@ -257,7 +257,7 @@ void MainWidget::editValues(Person oldValues, int row)
 
 void MainWidget::readFromFile(QString fileName)
 {
-    QFile currentFile(fileName.append("current"));
+    QFile currentFile(fileName);
 
     if (!currentFile.open(QIODevice::ReadOnly)) {
         QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."),
@@ -273,7 +273,6 @@ void MainWidget::readFromFile(QString fileName)
         QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
                                  tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
     } else {
-        //table->resetTable();
         for (const auto &person: qAsConst(listOfPeople))
             addPerson(person);
     }
@@ -294,7 +293,6 @@ void MainWidget::readFromFile(QString fileName)
         QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
                                  tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
     } else {
-        //table->resetTable();
         for (const auto &person: qAsConst(queueList))
             addPersonToQueue(person);
     }
@@ -302,7 +300,7 @@ void MainWidget::readFromFile(QString fileName)
 
 void MainWidget::writeToFile(QString fileName)
 {
-    QFile currentClients(fileName.append("current"));
+    QFile currentClients(fileName);
 
     if (!currentClients.open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), currentClients.errorString());
