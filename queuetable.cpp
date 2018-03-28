@@ -17,6 +17,7 @@ int QueueTable::columnCount(const QModelIndex &parent) const
     return 3;
     //Paikka jonossa
     //Nimi
+    //Info
 }
 
 QVariant QueueTable::data(const QModelIndex &index, int role) const

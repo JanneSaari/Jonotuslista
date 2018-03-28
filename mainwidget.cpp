@@ -151,17 +151,18 @@ void MainWidget::addPersonToQueue(const Person person)
     queueTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 
-void MainWidget::editPerson()
+void MainWidget::editSelectedPerson()
 {
     QTableView *temp = static_cast<QTableView*>(currentWidget());
     QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
     QItemSelectionModel *selectionModel = temp->selectionModel();
     QModelIndexList indexes = selectionModel->selectedRows();
 
+    Person person;
     foreach (QModelIndex index, indexes) {
         int row = proxy->mapToSource(index).row();
 
-        Person person = getPerson(row);
+        person = getPerson(row);
         editValues(person, row);
     }
 }
@@ -192,11 +193,12 @@ void MainWidget::moveFromQueue()
 
         QModelIndexList indexes = selectionModel->selectedRows();
 
+        Person person;
         foreach (QModelIndex index, indexes) {
             int row = proxy->mapToSource(index).row();
-            editPerson();
-            Person person = getPerson(row);
+            person = getPerson(row);
             addPerson(person);
+            editValues(person, row);
             removePerson();
         }
     }
@@ -269,13 +271,13 @@ void MainWidget::readFromFile(QString fileName)
     QDataStream currentIn(&currentFile);
     currentIn >> listOfPeople;
 
-    if (listOfPeople.isEmpty()) {
-        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
-                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
-    } else {
-        for (const auto &person: qAsConst(listOfPeople))
-            addPerson(person);
-    }
+//    if (listOfPeople.isEmpty()) {
+//        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
+//                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
+//    } else {
+    for (const auto &person: qAsConst(listOfPeople))
+        addPerson(person);
+//    }
 
     QFile queueFile(fileName.append("queue"));
 
@@ -289,13 +291,13 @@ void MainWidget::readFromFile(QString fileName)
     QDataStream queueIn(&queueFile);
     queueIn >> queueList;
 
-    if (queueList.isEmpty()) {
-        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
-                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
-    } else {
-        for (const auto &person: qAsConst(queueList))
-            addPersonToQueue(person);
-    }
+//    if (queueList.isEmpty()) {
+//        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
+//                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
+//    } else {
+    for (const auto &person: qAsConst(queueList))
+        addPersonToQueue(person);
+//    }
 }
 
 void MainWidget::writeToFile(QString fileName)
