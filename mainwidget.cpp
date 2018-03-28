@@ -34,6 +34,7 @@ Person MainWidget::getPerson(int row)
         QModelIndex infoIndex = currentClientsTable->index(row, 5, QModelIndex());
         QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
         person.setInfo(varInfo.toString());
+//        person = currentClientsTable->getPeople().at(row);
     }
     else if(currentIndex() == 1) {
         QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
@@ -42,6 +43,13 @@ Person MainWidget::getPerson(int row)
         QModelIndex infoIndex = queueTable->index(row, 2, QModelIndex());
         QVariant varInfo = queueTable->data(infoIndex, Qt::DisplayRole);
         person.setInfo(varInfo.toString());
+        QModelIndex startDateIndex = queueTable->index(row, 3, QModelIndex());
+        QVariant varStartDate = queueTable->data(startDateIndex, Qt::DisplayRole);
+        person.setStartingDate(varStartDate.toDate());
+        QModelIndex endDateIndex = queueTable->index(row, 4, QModelIndex());
+        QVariant varEndDate = queueTable->data(endDateIndex, Qt::DisplayRole);
+        person.setEndingDate(varEndDate.toDate());
+//        person = queueTable->getPeople().at(row);
     }
 
     return person;
@@ -149,6 +157,10 @@ void MainWidget::addPersonToQueue(const Person person)
     queueTable->setData(index, person.getName(), Qt::EditRole);
     index = queueTable->index(queueTable->getPeople().size() - 1, 2, QModelIndex());
     queueTable->setData(index, person.getInfo(), Qt::EditRole);
+    index = queueTable->index(queueTable->getPeople().size() - 1, 3, QModelIndex());
+    queueTable->setData(index, person.getStartingDate(), Qt::EditRole);
+    index = queueTable->index(queueTable->getPeople().size() - 1, 4, QModelIndex());
+    queueTable->setData(index, person.getEndingDate(), Qt::EditRole);
 }
 
 void MainWidget::editSelectedPerson()
@@ -196,9 +208,9 @@ void MainWidget::moveFromQueue()
         Person person;
         foreach (QModelIndex index, indexes) {
             int row = proxy->mapToSource(index).row();
+            editSelectedPerson();
             person = getPerson(row);
             addPerson(person);
-            editValues(person, row);
             removePerson();
         }
     }
@@ -252,6 +264,16 @@ void MainWidget::editValues(Person oldValues, int row)
             if(newValues.getInfo() != oldValues.getInfo()) {
                 QModelIndex index = queueTable->index(row, 2, QModelIndex());
                 queueTable->setData(index, QVariant(newValues.getInfo()), Qt::EditRole);
+            }
+            newValues.setStartingDate(editDialog.startingDate->date());
+            if(newValues.getStartingDate() != oldValues.getStartingDate()) {
+                QModelIndex index = queueTable->index(row, 3, QModelIndex());
+                queueTable->setData(index, QVariant(newValues.getStartingDate()), Qt::EditRole);
+            }
+            newValues.setEndingDate(editDialog.endingDate->date());
+            if(newValues.getEndingDate() != oldValues.getEndingDate()) {
+                QModelIndex index = queueTable->index(row, 4, QModelIndex());
+                queueTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
             }
         }
     }
