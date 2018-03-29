@@ -21,7 +21,7 @@ public:
     MainWidget();
     ~MainWidget();
 
-    Person getPerson(int row);
+    Person getPerson(int tabNumber, int row);
 
 public slots:
     void showAddDialog();
@@ -37,7 +37,7 @@ private:
     void setupQueueTable();
     void addPerson(const Person person);
     void addPersonToQueue(const Person person);
-    void editValues(Person oldValues, int row);
+    void openEditDialog(int tabNumber, int row, QString title = tr("Muokkaa henkilöä"));
     void readFromFile(QString fileName);
     void writeToFile(QString fileName);
 
