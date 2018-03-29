@@ -10,31 +10,30 @@ MainWidget::MainWidget()
     queueTable = new QueueTable(this);
     setupCurrentClientsTable();
     setupQueueTable();
-    readFromFile("testi");
+    readFromFile("Jonotuslista");
 }
 
 MainWidget::~MainWidget()
 {
-    writeToFile("testi");
+    writeToFile("Jonotuslista");
 }
 
 Person MainWidget::getPerson(int row)
 {
     Person person;
     if(currentIndex() == 0) {
-        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
+        QModelIndex nameIndex = currentClientsTable->index(row, 1, QModelIndex());
         QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
         person.setName(varName.toString());
-        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
+        QModelIndex startDateIndex = currentClientsTable->index(row, 2, QModelIndex());
         QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
         person.setStartingDate(varStartDate.toDate());
-        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
+        QModelIndex endDateIndex = currentClientsTable->index(row, 3, QModelIndex());
         QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
         person.setEndingDate(varEndDate.toDate());
-        QModelIndex infoIndex = currentClientsTable->index(row, 5, QModelIndex());
+        QModelIndex infoIndex = currentClientsTable->index(row, 6, QModelIndex());
         QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
         person.setInfo(varInfo.toString());
-//        person = currentClientsTable->getPeople().at(row);
     }
     else if(currentIndex() == 1) {
         QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
@@ -49,7 +48,6 @@ Person MainWidget::getPerson(int row)
         QModelIndex endDateIndex = queueTable->index(row, 4, QModelIndex());
         QVariant varEndDate = queueTable->data(endDateIndex, Qt::DisplayRole);
         person.setEndingDate(varEndDate.toDate());
-//        person = queueTable->getPeople().at(row);
     }
 
     return person;
@@ -136,16 +134,18 @@ void MainWidget::addPerson(const Person person)
     currentClientsTable->insertRows(0, 1, QModelIndex());
 
     QModelIndex index = currentClientsTable->index(0, 0, QModelIndex());
-    currentClientsTable->setData(index, person.getName(), Qt::EditRole);
+    currentClientsTable->setData(index, currentClientsTable->getPeople().indexOf(person) + 1, Qt::EditRole);
     index = currentClientsTable->index(0, 1, QModelIndex());
-    currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
+    currentClientsTable->setData(index, person.getName(), Qt::EditRole);
     index = currentClientsTable->index(0, 2, QModelIndex());
-    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
+    currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 3, QModelIndex());
     currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 4, QModelIndex());
-    currentClientsTable->setData(index, person.getStartingDate().addYears(1), Qt::EditRole);
+    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 5, QModelIndex());
+    currentClientsTable->setData(index, person.getStartingDate().addYears(1), Qt::EditRole);
+    index = currentClientsTable->index(0, 6, QModelIndex());
     currentClientsTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 

@@ -15,9 +15,13 @@ int QueueTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 5;
-    //Paikka jonossa
-    //Nimi
-    //Info
+    /*
+    0 Paikka jonossa
+    1 Nimi
+    2 Info
+    3 aloituspäivä
+    4 lopetuspäivä
+    */
 }
 
 QVariant QueueTable::data(const QModelIndex &index, int role) const
