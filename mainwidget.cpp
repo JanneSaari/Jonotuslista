@@ -68,6 +68,7 @@ void MainWidget::setupCurrentClientsTable()
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     tableView->setSortingEnabled(true);
+    tableView->sortByColumn(0, Qt::AscendingOrder);
 
     connect(tableView->selectionModel(),
         &QItemSelectionModel::selectionChanged,
@@ -97,6 +98,9 @@ void MainWidget::setupQueueTable()
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     tableView->setSortingEnabled(true);
+    tableView->sortByColumn(0, Qt::AscendingOrder);
+    tableView->setColumnHidden(3, true);
+    tableView->setColumnHidden(4, true);
 
     connect(tableView->selectionModel(),
         &QItemSelectionModel::selectionChanged,

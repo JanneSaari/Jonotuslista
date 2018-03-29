@@ -38,7 +38,7 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0) //Number of peolpe
+        if (index.column() == 0) //Number of people
             return index.row() + 1;
         else if (index.column() == 1) //Name
             return person.getName();
