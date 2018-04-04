@@ -14,9 +14,8 @@ int CurrentClientsTable::rowCount(const QModelIndex &parent) const
 int CurrentClientsTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 7;
+    return 6;
     /*
-    0 Luku,
     1 Nimi,
     2 aloituspäivä,
     3 lopetuspäivä,
@@ -38,19 +37,17 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0) //Number of people
-            return index.row() + 1;
-        else if (index.column() == 1) //Name
+        if (index.column() == 0) //Name
             return person.getName();
-        else if(index.column() == 2) //Starting date
+        else if(index.column() == 1) //Starting date
             return person.getStartingDate();
-        else if(index.column() == 3) //Ending date
+        else if(index.column() == 2) //Ending date
             return person.getEndingDate();
-        else if(index.column() == 4) //Days to ending date
+        else if(index.column() == 3) //Days to ending date
             return QDate::currentDate().daysTo(person.getEndingDate());
-        else if(index.column() == 5) //Days to full year
+        else if(index.column() == 4) //Days to full year
             return QDate::currentDate().daysTo(person.getStartingDate().addYears(1));
-        else if(index.column() == 6) //Info
+        else if(index.column() == 5) //Info
             return person.getInfo();
     }
     return QVariant();
@@ -64,23 +61,25 @@ QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientatio
     if (orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return tr("#");
-        case 1:
             return tr("Nimi");
-        case 2:
+        case 1:
             return tr("Aloituspäivä");
-        case 3:
+        case 2:
             return tr("Lopetuspäivä");
-        case 4:
+        case 3:
             return tr("Päiviä jäljellä(3kk)");
-        case 5:
+        case 4:
             return tr("Päiviä jäljellä(1v)");
-        case 6:
+        case 5:
             return tr("Lisätietoa");
 
         default:
             return QVariant();
         }
+    }
+
+    if (orientation == Qt::Vertical) {
+        return ;
     }
     return QVariant();
 }
@@ -100,13 +99,13 @@ bool CurrentClientsTable::setData(const QModelIndex &index, const QVariant &valu
 
         auto person = listOfPeople.value(row);
 
-        if (index.column() == 1)
+        if (index.column() == 0)
             person.setName(value.toString());
-        else if(index.column() == 2)
+        else if(index.column() == 1)
             person.setStartingDate(value.toDate());
-        else if(index.column() == 3)
+        else if(index.column() == 2)
             person.setEndingDate(value.toDate());
-        else if(index.column() == 6)
+        else if(index.column() == 5)
             person.setInfo(value.toString());
         else
             return false;

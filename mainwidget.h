@@ -8,6 +8,7 @@
 #include <QTabWidget>
 #include <QSortFilterProxyModel>
 #include <QItemSelection>
+#include <QTableView>
 
 class MainWindow;
 class QSortFilterProxyModel;
@@ -45,6 +46,8 @@ private:
     QueueTable *queueTable;
     QSortFilterProxyModel *currentClientsProxyModel;
     QSortFilterProxyModel *queuedClientsProxyModel;
+    QTableView *tableView;
+    QTableView *queueTableView;
 };
 
 #endif // MAINWIDGET_H

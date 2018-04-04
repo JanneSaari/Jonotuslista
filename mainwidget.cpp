@@ -1,5 +1,3 @@
-#include <QTableView>
-#include <QHeaderView>
 #include <QtWidgets>
 
 #include "mainwidget.h"
@@ -23,17 +21,17 @@ void MainWidget::setupCurrentClientsTable()
     currentClientsProxyModel = new QSortFilterProxyModel(this);
     currentClientsProxyModel->setSourceModel(currentClientsTable);
 
-    QTableView *tableView = new QTableView;
+    tableView = new QTableView(this);
     tableView->setModel(currentClientsProxyModel);
 
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->horizontalHeader()->setStretchLastSection(true);
-    tableView->verticalHeader()->hide();
+    tableView->verticalHeader();
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     tableView->setSortingEnabled(true);
-    tableView->sortByColumn(0, Qt::AscendingOrder);
+    tableView->sortByColumn(3, Qt::AscendingOrder);
 
     connect(tableView->selectionModel(),
         &QItemSelectionModel::selectionChanged,
@@ -53,31 +51,31 @@ void MainWidget::setupQueueTable()
     queuedClientsProxyModel = new QSortFilterProxyModel(this);
     queuedClientsProxyModel->setSourceModel(queueTable);
 
-    QTableView *tableView = new QTableView;
-    tableView->setModel(queuedClientsProxyModel);
+    queueTableView = new QTableView(this);
+    queueTableView->setModel(queuedClientsProxyModel);
 
-    tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-    tableView->horizontalHeader()->setStretchLastSection(true);
-    tableView->verticalHeader()->hide();
-    tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    queueTableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    queueTableView->horizontalHeader()->setStretchLastSection(true);
+    queueTableView->verticalHeader()->hide();
+    queueTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    queueTableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    tableView->setSortingEnabled(true);
-    tableView->sortByColumn(0, Qt::AscendingOrder);
-    tableView->setColumnHidden(3, true);
-    tableView->setColumnHidden(4, true);
+    queueTableView->setSortingEnabled(true);
+    queueTableView->sortByColumn(0, Qt::AscendingOrder);
+    queueTableView->setColumnHidden(3, true);
+    queueTableView->setColumnHidden(4, true);
 
-    connect(tableView->selectionModel(),
+    connect(queueTableView->selectionModel(),
         &QItemSelectionModel::selectionChanged,
         this, &MainWidget::selectionChanged);
 
     connect(this, &QTabWidget::currentChanged, this, [this](int tabIndex) {
-        auto *tableView = qobject_cast<QTableView *>(widget(tabIndex));
-        if (tableView)
-            emit selectionChanged(tableView->selectionModel()->selection());
+        auto *queueTableView = qobject_cast<QTableView *>(widget(tabIndex));
+        if (queueTableView)
+            emit selectionChanged(queueTableView->selectionModel()->selection());
     });
 
-    addTab(tableView, "Jono");
+    addTab(queueTableView, "Jono");
 }
 
 void MainWidget::showAddDialog()
@@ -103,18 +101,16 @@ void MainWidget::addPerson(const Person person)
     currentClientsTable->insertRows(0, 1, QModelIndex());
 
     QModelIndex index = currentClientsTable->index(0, 0, QModelIndex());
-    currentClientsTable->setData(index, currentClientsTable->getPeople().indexOf(person) + 1, Qt::EditRole);
-    index = currentClientsTable->index(0, 1, QModelIndex());
     currentClientsTable->setData(index, person.getName(), Qt::EditRole);
-    index = currentClientsTable->index(0, 2, QModelIndex());
+    index = currentClientsTable->index(0, 1, QModelIndex());
     currentClientsTable->setData(index, person.getStartingDate(), Qt::EditRole);
+    index = currentClientsTable->index(0, 2, QModelIndex());
+    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 3, QModelIndex());
     currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
     index = currentClientsTable->index(0, 4, QModelIndex());
-    currentClientsTable->setData(index, person.getEndingDate(), Qt::EditRole);
-    index = currentClientsTable->index(0, 5, QModelIndex());
     currentClientsTable->setData(index, person.getStartingDate().addYears(1), Qt::EditRole);
-    index = currentClientsTable->index(0, 6, QModelIndex());
+    index = currentClientsTable->index(0, 5, QModelIndex());
     currentClientsTable->setData(index, person.getInfo(), Qt::EditRole);
 }
 
@@ -136,16 +132,16 @@ Person MainWidget::getPerson(int tabNumber, int row)
 {
     Person person;
     if(tabNumber == 0) {
-        QModelIndex nameIndex = currentClientsTable->index(row, 1, QModelIndex());
+        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
         QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
         person.setName(varName.toString());
-        QModelIndex startDateIndex = currentClientsTable->index(row, 2, QModelIndex());
+        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
         QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
         person.setStartingDate(varStartDate.toDate());
-        QModelIndex endDateIndex = currentClientsTable->index(row, 3, QModelIndex());
+        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
         QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
         person.setEndingDate(varEndDate.toDate());
-        QModelIndex infoIndex = currentClientsTable->index(row, 6, QModelIndex());
+        QModelIndex infoIndex = currentClientsTable->index(row, 5, QModelIndex());
         QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
         person.setInfo(varInfo.toString());
     }
