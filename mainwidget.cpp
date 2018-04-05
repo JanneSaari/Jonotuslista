@@ -173,7 +173,7 @@ Person MainWidget::getPerson(int tabNumber, int row)
     return person;
 }
 
-void MainWidget::editSelectedPerson(bool editDate)
+int MainWidget::editSelectedPerson(bool editDate)
 {
     QTableView *temp = static_cast<QTableView*>(currentWidget());
     QSortFilterProxyModel *proxy = static_cast<QSortFilterProxyModel*>(temp->model());
@@ -182,11 +182,20 @@ void MainWidget::editSelectedPerson(bool editDate)
 
     foreach (QModelIndex index, indexes) {
         int row = proxy->mapToSource(index).row();
-        if(currentIndex() == 1)
-            openEditDialog(currentIndex(), row, editDate);
-        else
-            openEditDialog(currentIndex(), row);
+        if(currentIndex() == 1) {
+            if(openEditDialog(currentIndex(), row, editDate))
+                return 1;
+            else
+                return 0;
+            }
+        else {
+            if(openEditDialog(currentIndex(), row))
+                return 1;
+            else
+                return 0;
+        }
     }
+    return 0;
 }
 
 void MainWidget::removePerson()
@@ -202,7 +211,7 @@ void MainWidget::removePerson()
         if(currentIndex() == 0) {
             currentClientsTable->removeRows(row, 1, QModelIndex());
             if(!queueTable->getPeople().isEmpty()) {
-                if(!openEditDialog(1, 0, "Muokkaa jonosta otettavaa henkilöä")){
+                if(!openEditDialog(1, 0, true, "Muokkaa jonosta otettavaa henkilöä")){
                     break;
                 }
                 Person person = queueTable->getPeople().first();
@@ -231,7 +240,8 @@ void MainWidget::moveFromQueue()
         Person person;
         foreach (QModelIndex index, indexes) {
             int row = proxy->mapToSource(index).row();
-            editSelectedPerson(true);
+            if(!editSelectedPerson(true))
+                break;
             person = getPerson(currentIndex(), row);
             addPerson(person);
             removePerson();

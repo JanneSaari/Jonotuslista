@@ -26,7 +26,7 @@ public:
 
 public slots:
     void showAddDialog();
-    void editSelectedPerson(bool editDate = true);
+    int editSelectedPerson(bool editDate = true);
     void removePerson();
     void moveFromQueue();
 
