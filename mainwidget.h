@@ -26,7 +26,7 @@ public:
 
 public slots:
     void showAddDialog();
-    void editSelectedPerson();
+    void editSelectedPerson(bool editDate = true);
     void removePerson();
     void moveFromQueue();
 
@@ -38,7 +38,7 @@ private:
     void setupQueueTable();
     void addPerson(const Person person);
     void addPersonToQueue(const Person person);
-    int openEditDialog(int tabNumber, int row, QString title = tr("Muokkaa henkilöä"));
+    int openEditDialog(int tabNumber, int row, bool editDate = true, QString title = tr("Muokkaa henkilöä"));
     void readFromFile(QString fileName);
     void writeToFile(QString fileName);
 

@@ -1,6 +1,6 @@
 #include "adddialog.h"
 
-AddDialog::AddDialog()
+AddDialog::AddDialog(bool date)
 {
     mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
@@ -9,7 +9,9 @@ AddDialog::AddDialog()
     buttonLayout = new QHBoxLayout();
     mainLayout->addLayout(buttonLayout);
 
-    createEditFields();
+    createTextFields();
+    if(date)
+        createDateFields();
     createButtons();
 }
 
@@ -19,7 +21,7 @@ AddDialog::~AddDialog()
     delete buttonLayout;
 }
 
-void AddDialog::createEditFields()
+void AddDialog::createTextFields()
 {
     nameLabel = new QLabel(tr("Nimi"), this);
     nameField = new QLineEdit(this);
@@ -27,7 +29,10 @@ void AddDialog::createEditFields()
     infoLabel = new QLabel(tr("Lisätietoa"), this);
     infoField = new QLineEdit(this);
     formLayout->addRow(infoLabel, infoField);
+}
 
+void AddDialog::createDateFields()
+{
     startingDateLabel = new QLabel(tr("Aloituspäivä"), this);
     startingDate = new QDateEdit(QDate::currentDate(), this);
     formLayout->addRow(startingDateLabel, startingDate);

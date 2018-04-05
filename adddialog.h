@@ -13,7 +13,7 @@
 class AddDialog : public QDialog
 {
 public:
-    AddDialog();
+    AddDialog(bool date = true);
     ~AddDialog();
 
     QLineEdit *nameField;
@@ -23,7 +23,8 @@ public:
 
 private:
     void createButtons();
-    void createEditFields();
+    void createTextFields();
+    void createDateFields();
 
     QVBoxLayout *mainLayout;
     QFormLayout *formLayout;
