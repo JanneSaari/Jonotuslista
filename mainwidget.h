@@ -38,7 +38,7 @@ private:
     void setupQueueTable();
     void addPerson(const Person person);
     void addPersonToQueue(const Person person);
-    void openEditDialog(int tabNumber, int row, QString title = tr("Muokkaa henkilöä"));
+    int openEditDialog(int tabNumber, int row, QString title = tr("Muokkaa henkilöä"));
     void readFromFile(QString fileName);
     void writeToFile(QString fileName);
 

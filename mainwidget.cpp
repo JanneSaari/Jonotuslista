@@ -31,6 +31,8 @@ void MainWidget::setupCurrentClientsTable()
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     tableView->setSortingEnabled(true);
+    //TODO sorting by days remaining not working correctly if this way
+    //works fine when sorted in app
     tableView->sortByColumn(3, Qt::AscendingOrder);
 
     connect(tableView->selectionModel(),
@@ -189,10 +191,11 @@ void MainWidget::removePerson()
         if(currentIndex() == 0) {
             currentClientsTable->removeRows(row, 1, QModelIndex());
             if(!queueTable->getPeople().isEmpty()) {
-                //TODO add edit dialog
+                if(!openEditDialog(1, 0, "Muokkaa jonosta otettavaa henkilöä")){
+                    break;
+                }
                 Person person = queueTable->getPeople().first();
                 addPerson(person);
-                openEditDialog(0, currentClientsTable->getPeople().indexOf(person), "Muokkaa jonosta otettavaa henkilöä");
                 queueTable->removeRow(queueTable->getPeople().indexOf(person), QModelIndex());
             }
             else {
@@ -225,7 +228,7 @@ void MainWidget::moveFromQueue()
     }
 }
 
-void MainWidget::openEditDialog(int tabNumber, int row, QString title)
+int MainWidget::openEditDialog(int tabNumber, int row, QString title)
 {
     Person oldValues = getPerson(tabNumber, row);
     AddDialog editDialog;
@@ -286,7 +289,10 @@ void MainWidget::openEditDialog(int tabNumber, int row, QString title)
                 queueTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
             }
         }
+        return 1;
     }
+    else
+        return 0;
 }
 
 void MainWidget::readFromFile(QString fileName)
@@ -303,13 +309,8 @@ void MainWidget::readFromFile(QString fileName)
     QDataStream currentIn(&currentFile);
     currentIn >> listOfPeople;
 
-//    if (listOfPeople.isEmpty()) {
-//        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
-//                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
-//    } else {
     for (const auto &person: qAsConst(listOfPeople))
         addPerson(person);
-//    }
 
     QFile queueFile(fileName.append("queue"));
 
@@ -323,13 +324,8 @@ void MainWidget::readFromFile(QString fileName)
     QDataStream queueIn(&queueFile);
     queueIn >> queueList;
 
-//    if (queueList.isEmpty()) {
-//        QMessageBox::information(this, tr("Ei henkilöitä tiedostossa."),
-//                                 tr("Tiedosto jonka yritit avata ei sisällä henkilöitä."));
-//    } else {
     for (const auto &person: qAsConst(queueList))
         addPersonToQueue(person);
-//    }
 }
 
 void MainWidget::writeToFile(QString fileName)
