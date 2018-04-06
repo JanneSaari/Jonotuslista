@@ -24,22 +24,24 @@ public:
         return name == other.name;
     }
 
+    //These used to be private thats why setter and getters are used somewhere
     QString name;
     QDate startingDate;
     QDate endingDate;
     QString info;
+    bool continues;
 };
 
 inline QDataStream &operator<<(QDataStream &stream, const Person &person)
 {
     return stream << person.name << person.startingDate
-                  << person.endingDate << person.info;
+                  << person.endingDate << person.info << person.continues;
 }
 
 inline QDataStream &operator>>(QDataStream &stream, Person &person)
 {
     return stream >> person.name >> person.startingDate
-                  >> person.endingDate >> person.info;
+                  >> person.endingDate >> person.info >> person.continues;
 }
 
 #endif // PERSON_H

@@ -9,17 +9,19 @@
 #include <QLineEdit>
 #include <QDateEdit>
 #include <QLabel>
+#include <QCheckBox>
 
 class AddDialog : public QDialog
 {
 public:
-    AddDialog(bool date = true);
+    AddDialog(bool editDate = true);
     ~AddDialog();
 
     QLineEdit *nameField;
     QLineEdit *infoField;
     QDateEdit *startingDate;
     QDateEdit *endingDate;
+    QCheckBox *continueBox;
 
 private:
     void createButtons();
@@ -33,6 +35,7 @@ private:
     QLabel *infoLabel;
     QLabel *startingDateLabel;
     QLabel *endingDateLabel;
+    QLabel *continueLabel;
     QPushButton *okButton;
     QPushButton *cancelButton;
 };

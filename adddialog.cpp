@@ -1,7 +1,11 @@
 #include "adddialog.h"
 
-AddDialog::AddDialog(bool date)
+AddDialog::AddDialog(bool editDate)
 {
+    //If editDate is true, opens date editing and continue fields,
+    //otherwise opens simpler dialog window with just name and info fields
+    //Simpler window is used when editing person in queue
+
     mainLayout = new QVBoxLayout(this);
     setLayout(mainLayout);
     formLayout = new QFormLayout();
@@ -10,7 +14,7 @@ AddDialog::AddDialog(bool date)
     mainLayout->addLayout(buttonLayout);
 
     createTextFields();
-    if(date)
+    if(editDate)
         createDateFields();
     createButtons();
 }
@@ -33,6 +37,10 @@ void AddDialog::createTextFields()
 
 void AddDialog::createDateFields()
 {
+    continueLabel = new QLabel(tr("Jatkaako"), this);
+    continueBox = new QCheckBox(this);
+    formLayout->addRow(continueLabel, continueBox);
+
     startingDateLabel = new QLabel(tr("Aloituspäivä"), this);
     startingDate = new QDateEdit(QDate::currentDate(), this);
     formLayout->addRow(startingDateLabel, startingDate);
