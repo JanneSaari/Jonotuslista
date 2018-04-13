@@ -15,15 +15,6 @@ int CurrentClientsTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return 7;
-    /*
-    1 Nimi,
-    2 aloituspäivä,
-    3 lopetuspäivä,
-    (lopetuspäivä 1v),
-    4 päiviä 3kk,
-    5 päiviä 1v
-    6 lisätietoa
-    */
 }
 
 QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
@@ -48,10 +39,12 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
         else if(index.column() == 4) //Days to full year
             return QDate::currentDate().daysTo(person.getStartingDate().addYears(1));
         else if(index.column() == 5) { //Continues
-            if(person.continues)
+            if(person.getContinue()) {
                 return tr("Kyllä");
-            else
+            }
+            else {
                 return tr("Ei");
+            }
         }
         else if(index.column() == 6) //Info
             return person.getInfo();
@@ -92,6 +85,39 @@ QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientatio
     return QVariant();
 }
 
+//QVariant setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+//{
+//    if (role != Qt::DisplayRole)
+//        return QVariant();
+
+//    if (orientation == Qt::Horizontal) {
+//        switch (section) {
+//        case 0:
+//            return tr("Nimi");
+//        case 1:
+//            return tr("Aloituspäivä");
+//        case 2:
+//            return tr("Lopetuspäivä");
+//        case 3:
+//            return tr("Päiviä jäljellä(3kk)");
+//        case 4:
+//            return tr("Päiviä jäljellä(1v)");
+//        case 5:
+//            return tr("Jatkaako");
+//        case 6:
+//            return tr("Lisätietoa");
+
+//        default:
+//            return QVariant();
+//        }
+//    }
+
+//    if (orientation == Qt::Vertical) {
+//        return section + 1;
+//    }
+//    return QVariant();
+//}
+
 Qt::ItemFlags CurrentClientsTable::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -114,7 +140,7 @@ bool CurrentClientsTable::setData(const QModelIndex &index, const QVariant &valu
         else if(index.column() == 2)
             person.setEndingDate(value.toDate());
         else if(index.column() == 5)
-            person.continues = value.toBool();
+            person.setContinue(value.toBool());
         else if(index.column() == 6)
             person.setInfo(value.toString());
         else

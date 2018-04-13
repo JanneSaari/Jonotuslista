@@ -2,7 +2,7 @@
 
 AddDialog::AddDialog(bool editDate)
 {
-    //If editDate is true, opens date editing and continue fields,
+    //If editDate is true, opens editing fields for date and continue,
     //otherwise opens simpler dialog window with just name and info fields
     //Simpler window is used when editing person in queue
 

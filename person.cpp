@@ -24,6 +24,11 @@ void Person::setInfo(QString info)
     this->info = info;
 }
 
+void Person::setContinue(bool continues)
+{
+    this->continues = continues;
+}
+
 QString Person::getName() const
 {
     return name;
@@ -42,4 +47,9 @@ QDate Person::getEndingDate() const
 QString Person::getInfo() const
 {
     return info;
+}
+
+bool Person::getContinue() const
+{
+    return continues;
 }

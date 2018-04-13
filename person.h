@@ -13,11 +13,13 @@ public:
     void setStartingDate(QDate date);
     void setEndingDate(QDate date);
     void setInfo(QString info);
+    void setContinue(bool continues);
 
     QString getName() const;
     QString getInfo() const;
     QDate getStartingDate() const;
     QDate getEndingDate() const;
+    bool getContinue() const;
 
     bool operator==(const Person &other) const
     {
