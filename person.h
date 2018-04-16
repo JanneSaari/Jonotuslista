@@ -13,13 +13,13 @@ public:
     void setStartingDate(QDate date);
     void setEndingDate(QDate date);
     void setInfo(QString info);
-    void setContinue(bool continues);
+    void setOmaValmentaja(QString valmentaja);
 
     QString getName() const;
     QString getInfo() const;
     QDate getStartingDate() const;
     QDate getEndingDate() const;
-    bool getContinue() const;
+    QString getOmaValmentaja() const;
 
     bool operator==(const Person &other) const
     {
@@ -31,19 +31,19 @@ public:
     QDate startingDate;
     QDate endingDate;
     QString info;
-    bool continues;
+    QString omaValmentaja;
 };
 
 inline QDataStream &operator<<(QDataStream &stream, const Person &person)
 {
     return stream << person.name << person.startingDate
-                  << person.endingDate << person.info << person.continues;
+                  << person.endingDate << person.info << person.omaValmentaja;
 }
 
 inline QDataStream &operator>>(QDataStream &stream, Person &person)
 {
     return stream >> person.name >> person.startingDate
-                  >> person.endingDate >> person.info >> person.continues;
+                  >> person.endingDate >> person.info >> person.omaValmentaja;
 }
 
 #endif // PERSON_H

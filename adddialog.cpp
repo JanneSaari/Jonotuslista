@@ -37,9 +37,9 @@ void AddDialog::createTextFields()
 
 void AddDialog::createDateFields()
 {
-    continueLabel = new QLabel(tr("Jatkaako"), this);
-    continueBox = new QCheckBox(this);
-    formLayout->addRow(continueLabel, continueBox);
+    valmentajaLabel = new QLabel(tr("OmaValmentaja"), this);
+    valmentajaField = new QLineEdit(this);
+    formLayout->addRow(valmentajaLabel, valmentajaField);
 
     startingDateLabel = new QLabel(tr("Aloituspäivä"), this);
     startingDate = new QDateEdit(QDate::currentDate(), this);

@@ -26,7 +26,6 @@ void MainWidget::setupCurrentClientsTable()
 
     tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     tableView->horizontalHeader()->setStretchLastSection(true);
-    tableView->verticalHeader();
     tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
@@ -46,8 +45,6 @@ void MainWidget::setupCurrentClientsTable()
     });
 
     addTab(tableView, "Henkilöt");
-    //TODO update vertical header numbers
-    connect(tableView, SIGNAL(clicked(QModelIndex)), currentClientsTable, SLOT(setHeaderData));
 }
 
 void MainWidget::setupQueueTable()
@@ -93,7 +90,7 @@ void MainWidget::showAddDialog()
             person.setStartingDate(aDialog.startingDate->date());
             person.setEndingDate(aDialog.endingDate->date());
             person.setInfo(aDialog.infoField->text());
-            person.setContinue(aDialog.continueBox->isChecked());
+            person.setOmaValmentaja(aDialog.valmentajaField->text());
             addPerson(person);
         }
     }
@@ -124,7 +121,7 @@ void MainWidget::addPerson(const Person person)
     index = currentClientsTable->index(0, 4, QModelIndex());
     currentClientsTable->setData(index, person.getStartingDate().addYears(1), Qt::EditRole);
     index = currentClientsTable->index(0, 5, QModelIndex());
-    currentClientsTable->setData(index, person.getContinue(), Qt::EditRole);
+    currentClientsTable->setData(index, person.getOmaValmentaja(), Qt::EditRole);
     index = currentClientsTable->index(0, 6, QModelIndex());
     currentClientsTable->setData(index, person.getInfo(), Qt::EditRole);
 }
@@ -145,38 +142,40 @@ void MainWidget::addPersonToQueue(const Person person)
 
 Person MainWidget::getPerson(int tabNumber, int row)
 {
-    //I should change this to get person straight from the arrays instead of the tables.
-    Person person;
-    if(tabNumber == 0) {
-        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
-        QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
-        person.setName(varName.toString());
-        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
-        QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
-        person.setStartingDate(varStartDate.toDate());
-        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
-        QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
-        person.setEndingDate(varEndDate.toDate());
-        QModelIndex continueIndex = currentClientsTable->index(row, 5, QModelIndex());
-        QVariant varContinue = currentClientsTable->data(continueIndex, Qt::DisplayRole);
-        if(varContinue == tr("Ei"))
-            person.setContinue(false);
-        else if(varContinue == tr("Kyllä"))
-            person.setContinue(true);
-        QModelIndex infoIndex = currentClientsTable->index(row, 6, QModelIndex());
-        QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
-        person.setInfo(varInfo.toString());
-    }
-    else if(tabNumber == 1) {
-        QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
-        QVariant varName = queueTable->data(nameIndex, Qt::DisplayRole);
-        person.setName(varName.toString());
-        QModelIndex infoIndex = queueTable->index(row, 2, QModelIndex());
-        QVariant varInfo = queueTable->data(infoIndex, Qt::DisplayRole);
-        person.setInfo(varInfo.toString());
-    }
+//    //I should change this to get person straight from the arrays instead of the tables.
+//    Person person;
+//    if(tabNumber == 0) {
+//        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
+//        QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
+//        person.setName(varName.toString());
+//        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
+//        QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
+//        person.setStartingDate(varStartDate.toDate());
+//        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
+//        QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
+//        person.setEndingDate(varEndDate.toDate());
+//        QModelIndex valmentajaIndex = currentClientsTable->index(row, 5, QModelIndex());
+//        QVariant varValmentaja = currentClientsTable->data(valmentajaIndex, Qt::DisplayRole);
+//        person.setOmaValmentaja(varValmentaja.toString());
+//        QModelIndex infoIndex = currentClientsTable->index(row, 6, QModelIndex());
+//        QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
+//        person.setInfo(varInfo.toString());
+//    }
+//    else if(tabNumber == 1) {
+//        QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
+//        QVariant varName = queueTable->data(nameIndex, Qt::DisplayRole);
+//        person.setName(varName.toString());
+//        QModelIndex infoIndex = queueTable->index(row, 2, QModelIndex());
+//        QVariant varInfo = queueTable->data(infoIndex, Qt::DisplayRole);
+//        person.setInfo(varInfo.toString());
+//    }
 
-    return person;
+//    return person;
+
+    if(tabNumber == 0)
+        return currentClientsTable->getPeople().at(row);
+    else if(tabNumber == 1)
+        return queueTable->getPeople().at(row);
 }
 
 //Set editDate to true if you want to open editDialog with date editing
@@ -271,7 +270,7 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
         if(editDate){
             editDialog.startingDate->setDate(oldValues.getStartingDate());
             editDialog.endingDate->setDate(oldValues.getEndingDate());
-            editDialog.continueBox->setChecked(oldValues.getContinue());
+            editDialog.valmentajaField->setText(oldValues.getOmaValmentaja());
         }
 
         if(editDialog.exec()) {
@@ -297,6 +296,11 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
                     QModelIndex index = queueTable->index(row, 4, QModelIndex());
                     queueTable->setData(index, QVariant(newValues.getEndingDate()), Qt::EditRole);
                 }
+                newValues.setOmaValmentaja(editDialog.valmentajaField->text());
+                if(newValues.getOmaValmentaja() != oldValues.getOmaValmentaja()) {
+                    QModelIndex index = currentClientsTable->index(row, 5, QModelIndex());
+                    queueTable->setData(index, QVariant(newValues.getOmaValmentaja()), Qt::EditRole);
+                }
             }
             return 1;
         }
@@ -311,7 +315,7 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
         editDialog.startingDate->setDate(oldValues.getStartingDate());
         editDialog.endingDate->setDate(oldValues.getEndingDate());
         editDialog.infoField->setText(oldValues.getInfo());
-        editDialog.continueBox->setChecked(oldValues.getContinue());
+        editDialog.valmentajaField->setText(oldValues.getOmaValmentaja());
 
         if(editDialog.exec()) {
             Person newValues;
@@ -334,10 +338,10 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
                 index = currentClientsTable->index(row, 3, QModelIndex());
                 currentClientsTable->setData(index, QVariant(QDate::currentDate().daysTo(newValues.getEndingDate())), Qt::EditRole);
             }
-            newValues.setContinue(editDialog.continueBox->isChecked());
-            if(newValues.getContinue() != oldValues.getContinue()) {
+            newValues.setOmaValmentaja(editDialog.valmentajaField->text());
+            if(newValues.getOmaValmentaja() != oldValues.getOmaValmentaja()) {
                 QModelIndex index = currentClientsTable->index(row, 5, QModelIndex());
-                currentClientsTable->setData(index, QVariant(newValues.getContinue()), Qt::EditRole);
+                currentClientsTable->setData(index, QVariant(newValues.getOmaValmentaja()), Qt::EditRole);
             }
             newValues.setInfo(editDialog.infoField->text());
             if(newValues.getInfo() != oldValues.getInfo()) {

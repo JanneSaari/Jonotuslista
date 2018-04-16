@@ -14,14 +14,7 @@ int QueueTable::rowCount(const QModelIndex &parent) const
 int QueueTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 5;
-    /*
-    0 Paikka jonossa
-    1 Nimi
-    2 Info
-    3 aloituspäivä
-    4 lopetuspäivä
-    */
+    return 6;
 }
 
 QVariant QueueTable::data(const QModelIndex &index, int role) const
@@ -45,6 +38,8 @@ QVariant QueueTable::data(const QModelIndex &index, int role) const
             return person.getStartingDate();
         else if(index.column() == 4)
             return person.getEndingDate();
+        else if(index.column() == 5)
+            return person.getOmaValmentaja();
     }
     return QVariant();
 }
@@ -97,6 +92,8 @@ bool QueueTable::setData(const QModelIndex &index, const QVariant &value, int ro
             person.setStartingDate(value.toDate());
         else if(index.column() == 4)
             person.setEndingDate(value.toDate());
+        else if(index.column() == 5)
+            person.setOmaValmentaja(value.toString());
         else
             return false;
 

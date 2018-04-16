@@ -24,9 +24,9 @@ void Person::setInfo(QString info)
     this->info = info;
 }
 
-void Person::setContinue(bool continues)
+void Person::setOmaValmentaja(QString valmentaja)
 {
-    this->continues = continues;
+    omaValmentaja = valmentaja;
 }
 
 QString Person::getName() const
@@ -49,7 +49,7 @@ QString Person::getInfo() const
     return info;
 }
 
-bool Person::getContinue() const
+QString Person::getOmaValmentaja() const
 {
-    return continues;
+    return omaValmentaja;
 }
