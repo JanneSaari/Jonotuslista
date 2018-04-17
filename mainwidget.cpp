@@ -142,7 +142,7 @@ void MainWidget::addPersonToQueue(const Person person)
 
 Person MainWidget::getPerson(int tabNumber, int row)
 {
-//    //I should change this to get person straight from the arrays instead of the tables.
+//    //Not sure if it's better to get person from array or table.
 //    Person person;
 //    if(tabNumber == 0) {
 //        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
@@ -172,10 +172,12 @@ Person MainWidget::getPerson(int tabNumber, int row)
 
 //    return person;
 
+    Person person;
     if(tabNumber == 0)
-        return currentClientsTable->getPeople().at(row);
+        person = currentClientsTable->getPeople().at(row);
     else if(tabNumber == 1)
-        return queueTable->getPeople().at(row);
+        person = queueTable->getPeople().at(row);
+    return person;
 }
 
 //Set editDate to true if you want to open editDialog with date editing
@@ -298,7 +300,7 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
                 }
                 newValues.setOmaValmentaja(editDialog.valmentajaField->text());
                 if(newValues.getOmaValmentaja() != oldValues.getOmaValmentaja()) {
-                    QModelIndex index = currentClientsTable->index(row, 5, QModelIndex());
+                    QModelIndex index = queueTable->index(row, 5, QModelIndex());
                     queueTable->setData(index, QVariant(newValues.getOmaValmentaja()), Qt::EditRole);
                 }
             }
