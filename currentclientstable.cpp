@@ -14,7 +14,7 @@ int CurrentClientsTable::rowCount(const QModelIndex &parent) const
 int CurrentClientsTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 7;
+    return CurrentClientsTable::MaxColumn;
 }
 
 QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
@@ -28,20 +28,19 @@ QVariant CurrentClientsTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0) //Name
+        if (index.column() == CurrentClientsTable::NameColumn) //Name
             return person.getName();
-        else if(index.column() == 1) //Starting date
+        else if(index.column() == CurrentClientsTable::StartingDateColumn) //Starting date
             return person.getStartingDate();
-        else if(index.column() == 2) //Ending date
+        else if(index.column() == CurrentClientsTable::EndingDateColumn) //Ending date
             return person.getEndingDate();
-        else if(index.column() == 3) //Days to ending date
+        else if(index.column() == CurrentClientsTable::DaysToEndColumn) //Days to ending date
             return QDate::currentDate().daysTo(person.getEndingDate());
-        else if(index.column() == 4) //Days to full year
+        else if(index.column() == CurrentClientsTable::DaysToFullyearColumn) //Days to full year
             return QDate::currentDate().daysTo(person.getStartingDate().addYears(1));
-        else if(index.column() == 5) { //Continues
+        else if(index.column() == CurrentClientsTable::ValmentajaColumn) //Valmentaja
             return person.getOmaValmentaja();
-        }
-        else if(index.column() == 6) //Info
+        else if(index.column() == CurrentClientsTable::InfoColumn) //Info
             return person.getInfo();
     }
     return QVariant();
@@ -54,19 +53,19 @@ QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientatio
 
     if (orientation == Qt::Horizontal) {
         switch (section) {
-        case 0:
+        case CurrentClientsTable::NameColumn:
             return tr("Nimi");
-        case 1:
+        case CurrentClientsTable::StartingDateColumn:
             return tr("Aloituspäivä");
-        case 2:
+        case CurrentClientsTable::EndingDateColumn:
             return tr("Lopetuspäivä");
-        case 3:
+        case CurrentClientsTable::DaysToEndColumn:
             return tr("Päiviä jäljellä(3kk)");
-        case 4:
+        case CurrentClientsTable::DaysToFullyearColumn:
             return tr("Päiviä jäljellä(1v)");
-        case 5:
+        case CurrentClientsTable::ValmentajaColumn:
             return tr("OmaValmentaja");
-        case 6:
+        case CurrentClientsTable::InfoColumn:
             return tr("Lisätietoa");
 
         default:
@@ -92,15 +91,15 @@ bool CurrentClientsTable::setData(const QModelIndex &index, const QVariant &valu
 
         auto person = listOfPeople.value(row);
 
-        if (index.column() == 0)
+        if (index.column() == CurrentClientsTable::NameColumn)
             person.setName(value.toString());
-        else if(index.column() == 1)
+        else if(index.column() == CurrentClientsTable::StartingDateColumn)
             person.setStartingDate(value.toDate());
-        else if(index.column() == 2)
+        else if(index.column() == CurrentClientsTable::EndingDateColumn)
             person.setEndingDate(value.toDate());
-        else if(index.column() == 5)
+        else if(index.column() == CurrentClientsTable::ValmentajaColumn)
             person.setOmaValmentaja(value.toString());
-        else if(index.column() == 6)
+        else if(index.column() == CurrentClientsTable::InfoColumn)
             person.setInfo(value.toString());
         else
             return false;

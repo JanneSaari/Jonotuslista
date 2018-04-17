@@ -8,6 +8,7 @@
 class QueueTable : public QAbstractTableModel
 {
     Q_OBJECT
+
 public:
     QueueTable(QObject *parent = 0);
 
@@ -20,6 +21,17 @@ public:
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
     QVector<Person> getPeople();
+
+    enum Columns
+    {
+        NumberColumn,
+        NameColumn,
+        InfoColumn,
+        StartingDateColumn,
+        EndingDateColumn,
+        ValmentajaColumn,
+        MaxColumn
+    };
 
 private:
     QVector<Person> listOfPeople;

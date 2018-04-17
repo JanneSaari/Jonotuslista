@@ -14,7 +14,7 @@ int QueueTable::rowCount(const QModelIndex &parent) const
 int QueueTable::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 6;
+    return QueueTable::MaxColumn;
 }
 
 QVariant QueueTable::data(const QModelIndex &index, int role) const
@@ -28,17 +28,18 @@ QVariant QueueTable::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole) {
         const auto &person = listOfPeople.at(index.row());
 
-        if (index.column() == 0)
+        //Columns are defined in enum in headerfile. Changing order there changes column order.
+        if (index.column() == QueueTable::NumberColumn)
             return listOfPeople.indexOf(person) + 1;
-        else if(index.column() == 1)
+        else if(index.column() == QueueTable::NameColumn)
             return person.getName();
-        else if(index.column() == 2)
+        else if(index.column() == QueueTable::InfoColumn)
             return person.getInfo();
-        else if(index.column() == 3)
+        else if(index.column() == QueueTable::StartingDateColumn)
             return person.getStartingDate();
-        else if(index.column() == 4)
+        else if(index.column() == QueueTable::EndingDateColumn)
             return person.getEndingDate();
-        else if(index.column() == 5)
+        else if(index.column() == QueueTable::ValmentajaColumn)
             return person.getOmaValmentaja();
     }
     return QVariant();
@@ -51,15 +52,15 @@ QVariant QueueTable::headerData(int section, Qt::Orientation orientation, int ro
 
     if (orientation == Qt::Horizontal) {
         switch (section) {
-            case 0:
+            case QueueTable::NumberColumn:
                 return tr("Paikka jonossa");
-            case 1:
+            case QueueTable::NameColumn:
                 return tr("Nimi");
-            case 2:
+            case QueueTable::InfoColumn:
                 return tr("Info");
-            case 3:
+            case QueueTable::StartingDateColumn:
                 return tr("Aloituspäivä");
-            case 4:
+            case QueueTable::EndingDateColumn:
                 return tr("Lopetuspäivä");
 
             default:
@@ -84,15 +85,15 @@ bool QueueTable::setData(const QModelIndex &index, const QVariant &value, int ro
 
         auto person = listOfPeople.value(row);
 
-        if (index.column() == 1)
+        if (index.column() == QueueTable::NameColumn)
             person.setName(value.toString());
-        else if(index.column() == 2)
+        else if(index.column() == QueueTable::InfoColumn)
             person.setInfo(value.toString());
-        else if(index.column() == 3)
+        else if(index.column() == QueueTable::StartingDateColumn)
             person.setStartingDate(value.toDate());
-        else if(index.column() == 4)
+        else if(index.column() == QueueTable::EndingDateColumn)
             person.setEndingDate(value.toDate());
-        else if(index.column() == 5)
+        else if(index.column() == QueueTable::ValmentajaColumn)
             person.setOmaValmentaja(value.toString());
         else
             return false;

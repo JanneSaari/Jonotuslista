@@ -7,8 +7,6 @@
 
 #include "person.h"
 
-//TODO make enum for column numbers so that i dont have change numbers manually everytime something changes
-
 class CurrentClientsTable : public QAbstractTableModel
 {
     Q_OBJECT
@@ -25,6 +23,18 @@ public:
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
     QVector<Person> getPeople();
+
+    enum Columns
+    {
+        NameColumn,
+        StartingDateColumn,
+        EndingDateColumn,
+        DaysToEndColumn,
+        DaysToFullyearColumn,
+        ValmentajaColumn,
+        InfoColumn,
+        MaxColumn
+    };
 
 private:
     QVector<Person> listOfPeople;
