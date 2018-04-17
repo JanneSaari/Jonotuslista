@@ -16,9 +16,20 @@ MainWidget::~MainWidget()
     writeToFile("Jonotuslista");
 }
 
+//Toimii, testaa vielä
+//-----------------------------------------------------------------------
+QVariant MyProxy::headerData(int section, Qt::Orientation orientation, int role) const {
+  if(orientation!=Qt::Vertical || role!=Qt::DisplayRole)
+    return QSortFilterProxyModel::headerData(section, orientation, role);
+
+  return section+1;
+}
+//--------------------------------------------------------------------------
+
 void MainWidget::setupCurrentClientsTable()
 {
-    currentClientsProxyModel = new QSortFilterProxyModel(this);
+    currentClientsProxyModel = new MyProxy(); //TESTAA
+//  currentClientsProxyModel = new QSortFilterProxyModel(this);
     currentClientsProxyModel->setSourceModel(currentClientsTable);
 
     tableView = new QTableView(this);

@@ -73,6 +73,9 @@ QVariant CurrentClientsTable::headerData(int section, Qt::Orientation orientatio
         }
     }
 
+    if (orientation == Qt::Vertical)
+        return section + 1;
+
     return QVariant();
 }
 

@@ -14,6 +14,17 @@ class MainWindow;
 class QSortFilterProxyModel;
 class QAbstractTableModel;
 
+//Headeri toimii, pitää testata vielä
+//-----------------------------------------------------
+class MyProxy : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
+};
+//------------------------------------------------------------
+
 class MainWidget : public QTabWidget
 {
     Q_OBJECT
