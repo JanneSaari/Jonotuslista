@@ -10,6 +10,9 @@
 #include <QDateEdit>
 #include <QLabel>
 
+//Dialog window for adding and editing person.
+//If editDate is true, opens dialog window with
+//additional fields for editing date.
 class AddDialog : public QDialog
 {
 public:

@@ -14,22 +14,19 @@ MainWidget::MainWidget()
 MainWidget::~MainWidget()
 {
     writeToFile("Jonotuslista");
+    currentClientsProxyModel->deleteLater();
 }
 
-//Toimii, testaa vielä
-//-----------------------------------------------------------------------
 QVariant MyProxy::headerData(int section, Qt::Orientation orientation, int role) const {
   if(orientation!=Qt::Vertical || role!=Qt::DisplayRole)
     return QSortFilterProxyModel::headerData(section, orientation, role);
 
-  return section+1;
+  return section + 1;
 }
-//--------------------------------------------------------------------------
 
 void MainWidget::setupCurrentClientsTable()
 {
-    currentClientsProxyModel = new MyProxy(); //TESTAA
-//  currentClientsProxyModel = new QSortFilterProxyModel(this);
+    currentClientsProxyModel = new MyProxy();
     currentClientsProxyModel->setSourceModel(currentClientsTable);
 
     tableView = new QTableView(this);
@@ -192,6 +189,7 @@ Person MainWidget::getPerson(int tabNumber, int row)
 }
 
 //Set editDate to true if you want to open editDialog with date editing
+//If false, opens simpler dialog with just name and info fields.
 int MainWidget::editSelectedPerson(bool editDate)
 {
     QTableView *temp = static_cast<QTableView*>(currentWidget());

@@ -14,8 +14,8 @@ class MainWindow;
 class QSortFilterProxyModel;
 class QAbstractTableModel;
 
-//Headeri toimii, pitää testata vielä
-//-----------------------------------------------------
+//MyProxy is used to make header for the currentClientsTable.
+//Vertical header keeps numbering in order even after sorting the table.
 class MyProxy : public QSortFilterProxyModel
 {
     Q_OBJECT
@@ -23,7 +23,6 @@ class MyProxy : public QSortFilterProxyModel
 public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 };
-//------------------------------------------------------------
 
 class MainWidget : public QTabWidget
 {
@@ -55,7 +54,7 @@ private:
 
     CurrentClientsTable *currentClientsTable;
     QueueTable *queueTable;
-    QSortFilterProxyModel *currentClientsProxyModel;
+    MyProxy *currentClientsProxyModel;
     QSortFilterProxyModel *queuedClientsProxyModel;
     QTableView *tableView;
     QTableView *queueTableView;
