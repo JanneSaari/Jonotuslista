@@ -1,21 +1,30 @@
+/****************************************************************************
+MIT License
+
+Copyright (c) 2018 Janne Saari
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+****************************************************************************/
+
 #include <QtWidgets>
 
 #include "mainwidget.h"
-
-MainWidget::MainWidget()
-{
-    currentClientsTable = new CurrentClientsTable(this);
-    queueTable = new QueueTable(this);
-    setupCurrentClientsTable();
-    setupQueueTable();
-    readFromFile("Jonotuslista");
-}
-
-MainWidget::~MainWidget()
-{
-    writeToFile("Jonotuslista");
-    currentClientsProxyModel->deleteLater();
-}
 
 QVariant MyProxy::headerData(int section, Qt::Orientation orientation, int role) const {
   if(orientation!=Qt::Vertical || role!=Qt::DisplayRole)
@@ -23,6 +32,25 @@ QVariant MyProxy::headerData(int section, Qt::Orientation orientation, int role)
 
   return section + 1;
 }
+
+MainWidget::MainWidget()
+{
+    currentClientsTable = new CurrentClientsTable(this);
+    queueTable = new QueueTable(this);
+    setupCurrentClientsTable();
+    setupQueueTable();
+    loadSettings();
+    if(!lastLoadFile.isEmpty())
+        readFromFile(lastLoadFile);
+}
+
+MainWidget::~MainWidget()
+{
+    saveSettings();
+    currentClientsProxyModel->deleteLater();
+    delete(currentClientsProxyModel);
+}
+
 
 void MainWidget::setupCurrentClientsTable()
 {
@@ -38,8 +66,6 @@ void MainWidget::setupCurrentClientsTable()
     tableView->setSelectionMode(QAbstractItemView::SingleSelection);
 
     tableView->setSortingEnabled(true);
-    //TODO sorting by days remaining not working correctly if this way
-    //works fine when sorted in app
     tableView->sortByColumn(CurrentClientsTable::StartingDateColumn, Qt::AscendingOrder);
 
     connect(tableView->selectionModel(),
@@ -150,36 +176,6 @@ void MainWidget::addPersonToQueue(const Person person)
 
 Person MainWidget::getPerson(int tabNumber, int row)
 {
-//    //Not sure if it's better to get person from array or table.
-//    Person person;
-//    if(tabNumber == 0) {
-//        QModelIndex nameIndex = currentClientsTable->index(row, 0, QModelIndex());
-//        QVariant varName = currentClientsTable->data(nameIndex, Qt::DisplayRole);
-//        person.setName(varName.toString());
-//        QModelIndex startDateIndex = currentClientsTable->index(row, 1, QModelIndex());
-//        QVariant varStartDate = currentClientsTable->data(startDateIndex, Qt::DisplayRole);
-//        person.setStartingDate(varStartDate.toDate());
-//        QModelIndex endDateIndex = currentClientsTable->index(row, 2, QModelIndex());
-//        QVariant varEndDate = currentClientsTable->data(endDateIndex, Qt::DisplayRole);
-//        person.setEndingDate(varEndDate.toDate());
-//        QModelIndex valmentajaIndex = currentClientsTable->index(row, 5, QModelIndex());
-//        QVariant varValmentaja = currentClientsTable->data(valmentajaIndex, Qt::DisplayRole);
-//        person.setOmaValmentaja(varValmentaja.toString());
-//        QModelIndex infoIndex = currentClientsTable->index(row, 6, QModelIndex());
-//        QVariant varInfo = currentClientsTable->data(infoIndex, Qt::DisplayRole);
-//        person.setInfo(varInfo.toString());
-//    }
-//    else if(tabNumber == 1) {
-//        QModelIndex nameIndex = queueTable->index(row, 1, QModelIndex());
-//        QVariant varName = queueTable->data(nameIndex, Qt::DisplayRole);
-//        person.setName(varName.toString());
-//        QModelIndex infoIndex = queueTable->index(row, 2, QModelIndex());
-//        QVariant varInfo = queueTable->data(infoIndex, Qt::DisplayRole);
-//        person.setInfo(varInfo.toString());
-//    }
-
-//    return person;
-
     Person person;
     if(tabNumber == 0)
         person = currentClientsTable->getPeople().at(row);
@@ -366,8 +362,34 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
     }
 }
 
+void MainWidget::openFile()
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Avaa tiedosto"), QDir::currentPath(), tr("(*.list)"));
+    if(!filename.isEmpty()) {
+        readFromFile(filename);
+    }
+}
+
+void MainWidget::saveFile()
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Tallenna tiedosto"), QDir::currentPath(), tr("(*.list)"));
+    if(!filename.isEmpty()) {
+        writeToFile(filename);
+    }
+}
+
+void MainWidget::newFile()
+{
+    currentClientsTable->resetTable();
+    queueTable->resetTable();
+
+    lastLoadFile.clear();
+}
+
 void MainWidget::readFromFile(QString fileName)
 {
+    QString temp = fileName;
+
     QFile currentFile(fileName);
 
     if (!currentFile.open(QIODevice::ReadOnly)) {
@@ -376,6 +398,14 @@ void MainWidget::readFromFile(QString fileName)
         return;
     }
 
+    QFile queueFile(fileName.append("q"));
+    if (!queueFile.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, tr("Jonolistaa ei pystytty avaamaan."),
+            queueFile.errorString());
+        return;
+    }
+
+    currentClientsTable->resetTable();
     QVector<Person> listOfPeople;
     QDataStream currentIn(&currentFile);
     currentIn >> listOfPeople;
@@ -383,41 +413,60 @@ void MainWidget::readFromFile(QString fileName)
     for (const auto &person: qAsConst(listOfPeople))
         addPerson(person);
 
-    QFile queueFile(fileName.append("queue"));
-
-    if (!queueFile.open(QIODevice::ReadOnly)) {
-        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."),
-            queueFile.errorString());
-        return;
-    }
-
+    queueTable->resetTable();
     QVector<Person> queueList;
     QDataStream queueIn(&queueFile);
     queueIn >> queueList;
 
     for (const auto &person: qAsConst(queueList))
         addPersonToQueue(person);
+
+    lastLoadFile = temp;
 }
 
 void MainWidget::writeToFile(QString fileName)
 {
-    QFile currentClients(fileName);
+    QString temp = fileName;
 
+    QFile currentClients(fileName);
+    if(!currentClients.fileName().endsWith(".list"))
+        currentClients.setFileName(fileName.append(".list"));
     if (!currentClients.open(QIODevice::WriteOnly)) {
         QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), currentClients.errorString());
+        return;
+    }
+
+    QFile queueFile(fileName.append("q"));
+    if (!queueFile.open(QIODevice::WriteOnly)) {
+        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), queueFile.errorString());
         return;
     }
 
     QDataStream currentOut(&currentClients);
     currentOut << currentClientsTable->getPeople();
 
-    QFile queueFile(fileName.append("queue"));
-
-    if (!queueFile.open(QIODevice::WriteOnly)) {
-        QMessageBox::information(this, tr("Tiedostoa ei pystytty avaamaan."), queueFile.errorString());
-        return;
-    }
-
     QDataStream queueOut(&queueFile);
     queueOut << queueTable->getPeople();
+
+    lastSavedFile = temp;
+}
+
+void MainWidget::saveSettings()
+{
+    QFile settingsFile("settings");
+    if(!settingsFile.open(QIODevice::WriteOnly)) {
+        return;
+    }
+    QDataStream out(&settingsFile);
+    out << lastLoadFile << lastSavedFile;
+}
+
+void MainWidget::loadSettings()
+{
+    QFile settingsFile("settings");
+    if(!settingsFile.open(QIODevice::ReadOnly)) {
+        return;
+    }
+    QDataStream in(&settingsFile);
+    in >> lastLoadFile >> lastSavedFile;
 }
