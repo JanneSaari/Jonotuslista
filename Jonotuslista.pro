@@ -42,3 +42,6 @@ HEADERS += \
 
 FORMS += \
         mainwindow.ui
+
+DISTFILES += \
+    LICENSE.txt
