@@ -1,0 +1,39 @@
+Tehty käyttäen QT 5.9.2
+
+Main
+	->MainWindow
+		->MainWidget
+			->AddDialog (Ikkuna uuden henkilön lisäämiseen ja muokkaamiseen)
+			->CurrentClientsTable (Tämän hetkiset asiakkaat sisältävä taulukko)
+			->QueueTable (Jonossa olevat asiakkaat sisältävä taulukko)
+			->Person 
+			
+			
+Alla ohjeet uuden sarakkeen lisäämiseen taulukkoihin.
+Jos huomaat jotain puuttuvan näistä, lisääthän ne tähän.
+
+Uuden sarakkeen lisääminen/poistaminen CurrentClientsTable:een
+	currentclientstable.h
+		- enum Columns					- lisää uusi arvo
+	currentclientstable.cpp
+		- data()						- uusi else if{} ja palautettava arvo
+		- headerData()					- uusi case halutulle otsikolle
+		- setData()						- uusi else if{} joka asettaa halutun arvon
+	AddDialog							- lisää tarvittaessa uusi kenttä
+	Person								- lisää tarvittaessa uusi arvo
+	mainWidget.cpp
+		- addPerson()					- lisää uusi arvo haluttuun indeksiin
+		- openEditDialog()				- hae uusi arvo editDialogista
+		- openEditDialog()				- lisää uusi if else {} function alempaan puoliskoon, joka avaa isomman ikkunan
+		
+Uuden sarakkeen lisääminen/poistaminen QueueTable:een
+	queuetable.h
+		- enum Columns					- lisää uusi arvo
+	queuetable.cpp
+		- data()						- uusi else if{} ja palautettava arvo
+		- headerData()					- uusi case halutulle otsikolle
+		- setData()						- uusi else if{} joka asettaa halutun arvon
+		- addPersonToQueue()			- lisää uusi arvo haluttuun indeksiin
+	mainWidget.cpp
+		- openEditDialog()				- hae uusi arvo editDialogista
+		- openEditDialog()				- lisää uusi if else{} function ylempään puoliskoon, joka avaa pienemmän, yksinkertaisemman ikkunan
