@@ -1,4 +1,5 @@
 Tehty käyttäen QT 5.9.2
+Koodi on löydettävissä myös https://github.com/JanneSaari/Jonotuslista
 
 Ohjelman tekeminen Windowsille käy helpoiten seuraamalla ohjeita http://doc.qt.io/qt-5/windows-deployment.html
 
