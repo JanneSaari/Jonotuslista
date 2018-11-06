@@ -268,6 +268,8 @@ void MainWidget::moveFromQueue()
 int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString title)
 {
     Person oldValues = getPerson(tabNumber, row);
+
+    //Simpler window for editing person in queue
     if(tabNumber == 1) {
         AddDialog editDialog(editDate);
         editDialog.setWindowTitle(title);
@@ -314,6 +316,8 @@ int MainWidget::openEditDialog(int tabNumber, int row, bool editDate, QString ti
         else
             return 0;
     }
+
+    //Bigger window with option to edit date. Used to edit people in currentClientsTable
     else {
         AddDialog editDialog(editDate);
         editDialog.setWindowTitle(title);
